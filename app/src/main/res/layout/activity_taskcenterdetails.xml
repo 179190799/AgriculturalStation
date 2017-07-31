@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <com.youth.banner.Banner
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"></com.youth.banner.Banner>
+
+            <TextView
+                android:id="@+id/alltask_details_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
+                android:text="项目标题：宏兴农场棉花、水稻打药"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/taskDetailsDesc"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/alltask_details_crops"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:layout_marginBottom="5dp"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/alltask_details_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="作业面积：10亩" />
+
+                <TextView
+                    android:id="@+id/alltask_details_totalprice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/alltask_details_area"
+                    android:padding="5dp"
+                    android:text="项目款：￥12000"
+                    android:textColor="@android:color/holo_red_light" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/alltask_details_undertakeType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="6星及以上用户可接"
+                    android:textColor="@color/colorGreenDark"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/alltask_details_schedule"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/alltask_details_undertakeType"
+                    android:padding="5dp"
+                    android:text="要求工期：5天" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/alltask_details_participationnum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="目前已有5人参与投标"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/alltask_details_endTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/alltask_details_participationnum"
+                    android:padding="5dp"
+                    android:text="10天后截止" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/alltask_details_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="具体地址：广西南宁市西乡塘区西十路罗文村宏兴农场"
+                android:textSize="16sp" />
+
+            <!--进行中的任务的内容-->
+            <LinearLayout
+                android:id="@+id/ongoing_task_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/finish_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="已完成作业亩数：10亩" />
+
+                <TextView
+                    android:id="@+id/contact_admin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/taskDetailsContactAdmin"
+                    android:textColor="@color/colorBlueDark" />
+
+                <TextView
+                    android:id="@+id/current_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="任务完成度：25%"
+                    android:textColor="@color/colorBlueDark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/taskDetailsSatelliteImg" />
+
+                <ImageView
+                    android:id="@+id/satellite_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_margin="5dp"
+                    android:scaleType="fitXY" />
+            </LinearLayout>
+            <!--进行中的任务的内容-->
+
+            <Button
+                android:id="@+id/alltask_details_joinbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="50dp"
+                android:background="@drawable/mine_btn_selector"
+                android:paddingBottom="10dp"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:paddingTop="10dp"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

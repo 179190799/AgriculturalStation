@@ -1,0 +1,205 @@
+<resources>
+    <string name="app_name">农业驿站</string>
+    <string name="loadingTip">加载中，请稍候...</string>
+    <string name="welcomeSkip">跳过</string>
+    <string name="hide_down">隐藏</string>
+    <string name="comment_content">输入评论内容</string>
+    <string name="send">发送</string>
+
+    <!--底部tab-->
+    <string name="homepage">主页</string>
+    <string name="task">任务</string>
+    <string name="grab">抢单</string>
+    <string name="forum">论坛</string>
+    <string name="mine">我的</string>
+
+    <!--账户信息-->
+    <string name="accountbalance">账户余额：</string>
+    <string name="accountlevel">我的星级：</string>
+    <string name="accountintegral">个人积分：</string>
+    <string name="recharge">充值</string>
+    <string name="withdrawal">提现</string>
+
+    <!--添加农场-->
+    <string name="farmInfoTitle">农场信息</string>
+    <string name="addfarmName">农场名称</string>
+    <string name="addfarmMaster">农场所有者</string>
+    <string name="addfarmArea">农场面积</string>
+    <string name="addfarmCrops">主要农作物</string>
+    <string name="ProvinceCity">所在区域</string>
+    <string name="addfarmAddress">农场所在地</string>
+    <string name="addfarmImages">农场图片：</string>
+
+    <!--添加农机-->
+    <string name="addLocoName">车主</string>
+    <string name="addLocoBuyTime">购买时间</string>
+    <string name="addLocoWorkTime">运营时间</string>
+    <string name="addLocoPictures">农机图片</string>
+
+    <!--相册-->
+    <string name="albumPreview">预览</string>
+    <string name="albumCancel">取消</string>
+    <string name="albumFinish">完成</string>
+
+    <!--身份认证-->
+    <string name="identityRealName">真实姓名</string>
+    <string name="identityRealNameTips">请输入真实姓名</string>
+    <string name="identityNumber">证件号码</string>
+    <string name="identityNumberTips">请输入证件号码</string>
+    <string name="identityPositive">身份证正面照：</string>
+    <string name="identityNegative">身份证反面照：</string>
+
+    <!--收支明细-->
+    <string name="balanceIncome">收入(截至今日0点)</string>
+    <string name="balanceSpending">支出(截至今日0点)</string>
+    <string name="balanceBalance">账户余额</string>
+    <string name="balanceRecords">交易记录</string>
+
+    <!--个人基础信息-->
+    <string name="baseInfoTitle">基础信息</string>
+    <string name="baseInfoTips">未填写</string>
+    <string name="baseInfoUsername">用户名</string>
+    <string name="baseInfoUsertype">用户类型</string>
+    <string name="baseInfoPhone">联系电话</string>
+    <string name="baseInfoRealName">真实姓名</string>
+    <string name="baseInfoIdCard">身份证号</string>
+    <string name="baseInfoNativePlace">籍贯</string>
+    <string name="baseInfoAddress">详细地址</string>
+    <string name="baseInfoCertificate1">相关证件一：</string>
+    <string name="baseInfoCertificate2">相关证件二：</string>
+    <string name="baseInfoSubmit">提交</string>
+
+    <!--评价-->
+    <string name="evaluationTips">您的评价是我们前进的动力，写点什么吧</string>
+
+    <!--忘记密码-->
+    <string name="retrievePassword">手机号码：</string>
+    <string name="phoneNumber">手机号码：</string>
+    <string name="verificationCode">验证码：</string>
+    <string name="newPassword">新密码：</string>
+    <string name="confirmNewPassword">确认新密码：</string>
+    <string name="getVerifyCode">获取验证码</string>
+    <string name="retrieveTips">6~16位数字、字母，无空格</string>
+    <string name="confirmModify">确认修改</string>
+
+    <!--农机详情-->
+    <string name="locomotiveName">农机手</string>
+    <string name="locomotiveOwner">机车名称</string>
+    <string name="locomotiveNature">工作性质</string>
+    <string name="locomotiveOperateTime">运营时间</string>
+    <string name="locomotiveStatus">目前状态</string>
+    <string name="district">区域：</string>
+
+    <!--登录-->
+    <string name="loginUserNameTips">用户名/手机号</string>
+    <string name="loginPassWordTips">请输入密码</string>
+    <string name="loginBtn">登&#160;&#160;&#160;&#160;录</string>
+    <string name="loginForgotPassword">忘记密码?</string>
+    <string name="loginRegister">注册账号</string>
+
+    <!--密码管理-->
+    <string name="pwdManageOldPWD">原始密码</string>
+    <string name="pwdManageOldPWDTips">请输入原始密码</string>
+    <string name="pwdManageNewPWD">新密码</string>
+    <string name="pwdManageNewPWDTips">请输入新密码</string>
+    <string name="pwdManageConfirmNewPWD">确认新密码</string>
+    <string name="pwdManageModifyTips">* 新密码不能与原始密码相同</string>
+
+    <!--帖子详情-->
+    <string name="postDiscuss">评论</string>
+    <string name="postDiscussBtn">确定评论</string>
+
+    <!--充值-->
+    <string name="rechargeSum">充值金额</string>
+    <string name="rechargeSumTips">请输入充值金额</string>
+    <string name="rechargeWay">请选择支付方式：</string>
+    <string name="rechargeNextBtn">下一步</string>
+    <string name="rechargeWeiXinPay">微信支付</string>
+
+    <!--注册-->
+    <string name="registerUserNameTips">输入您的用户名</string>
+    <string name="registerPwd">密&#160;码</string>
+    <string name="registerConfirmPwd">确认密码</string>
+    <string name="registerPhone">手机号码</string>
+    <string name="registerPhoneCode">手机验证码</string>
+    <string name="registerAgreement">接受服务协议</string>
+    <string name="registerBtn">注册</string>
+    <string name="registerLoginTips">已有账号？直接去</string>
+
+    <!--发布任务-->
+    <string name="releaseTaskName">任务名称：</string>
+    <string name="releaseTaskNameDesc">任务描述：</string>
+    <string name="releaseTaskArea">作业面积：</string>
+    <string name="releaseTaskLimit">工期要求：</string>
+    <string name="limitUnit">天</string>
+    <string name="releaseTaskMostPrice">竞标最高限价：</string>
+    <string name="mostPriceUnit">元/亩</string>
+    <string name="releaseTaskTotalPrice">总价：</string>
+    <string name="totalPriceUnit">元</string>
+    <string name="releaseTaskStartTime">进场开工时间：</string>
+    <string name="releaseTaskAddress">具体位置：</string>
+    <string name="releaseTaskUseType">可接用户：</string>
+    <string name="releaseTaskPictures">农场图片：</string>
+    <string name="releaseTaskTips">注：信息必须填写完整，填写不完整无法提交</string>
+    <string name="releaseBtn">提交发布</string>
+
+    <!--任务中心-->
+    <string name="taskCenterTime">时间</string>
+    <string name="taskCenterProjectPrice">项目款</string>
+
+    <!--任务详情-->
+    <string name="taskDetailsTitle">项目标题：</string>
+    <string name="taskDetailsDesc">项目描述：</string>
+    <string name="taskDetailsFinishArea">已完成作业亩数：</string>
+    <string name="taskDetailsContactAdmin">联系后台</string>
+    <string name="taskDetailsFinishProgress">任务完成度：</string>
+    <string name="taskDetailsSatelliteImg">任务卫星图</string>
+    <string name="taskDetailsJoinBtn">参与投标</string>
+
+    <!--提现-->
+    <string name="withdrawalAllowSum">可提现金额：</string>
+    <string name="withdrawalSum">提现金额：</string>
+    <string name="withdrawalToBackCard">所属银行：</string>
+    <string name="withdrawalUserName">用户姓名：</string>
+    <string name="withdrawalFinishBtn">完成</string>
+    <string name="withdrawalAccount">银行账号（或支付宝账号）：</string>
+
+
+    <!--PopupWindow弹窗-->
+    <string name="popupCamera">拍照</string>
+    <string name="popupAlbum">相册</string>
+    <string name="popupCancel">取消</string>
+
+    <!--FooterLoading-->
+    <string name="defaultLoading">正在加载...</string>
+
+    <!--主页HomeFragment-->
+    <string name="homeFragFarmer">农场主</string>
+    <string name="homeFragTaskCenter">任务中心</string>
+    <string name="homeFragTradeAlerts">行业快讯</string>
+    <string name="homeFragClickMore">点击查看更多>></string>
+
+    <!--我的MineFragment-->
+    <string name="MineFragPersonalCenter">个人中心</string>
+    <string name="MineFragPersonalInfo">个人信息</string>
+    <string name="MineFragReleaseTask">发布的任务</string>
+    <string name="MineFragAccountInfo">账户信息</string>
+    <string name="MineFragIdentity">身份认证</string>
+    <string name="MineFragPayment">收支明细</string>
+    <string name="MineFragPwdManage">密码管理</string>
+    <string name="MineFragMessage">我的消息</string>
+    <string name="MineFragRegime">奖罚制度</string>
+    <string name="MineFragSafetyExit">安全退出</string>
+    <string name="MineFragPerfectInfoBtn">完善资料</string>
+    <string name="MineFragUserName">用户名：</string>
+    <string name="MineFragGoLogin">去登录/注册</string>
+
+    <!--引导页guide-->
+    <string name="guideExperience">立即体验</string>
+
+    <!---->
+    <string name="currentPlace">您当前的位置：</string>
+    <string name="releaseDemand">发需求</string>
+
+
+</resources>

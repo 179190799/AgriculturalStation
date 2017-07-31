@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/item_comment_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="admin："
+        android:textColor="@color/colorGreenDark"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/item_comment_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="撒旦飞洒地方撒飞洒发萨芬撒发生撒打发的上发撒发生的发生放大法发生的飞洒发斯蒂芬"/>
+</LinearLayout>

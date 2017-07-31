@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_dark"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/recharge_amount_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:text="@string/rechargeSum"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/recharge_amount_et"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/rechargeSumTips"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/recharge_amount_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/et_delete_selector" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="@string/rechargeWay" />
+
+    <RadioGroup
+        android:id="@+id/recharge_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="horizontal">
+
+
+        <RadioButton
+            android:id="@+id/recharge_radio_alipay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:drawableLeft="@mipmap/ic_alipay"
+            android:drawablePadding="5dp" />
+
+        <RadioButton
+            android:id="@+id/recharge_radio_weixin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@mipmap/ic_weixin"
+            android:drawablePadding="5dp"
+            android:text="@string/rechargeWeiXinPay"
+            android:textColor="@android:color/holo_green_dark" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/recharge_next_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/mine_btn_selector"
+        android:paddingBottom="10dp"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
+        android:paddingTop="10dp"
+        android:text="@string/rechargeNextBtn"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
+
+</LinearLayout>

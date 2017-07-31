@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/light_dark"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/top_bg"
+                layout="@layout/tab_top_common" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:orientation="horizontal"
+                    android:paddingBottom="25dp"
+                    android:paddingTop="25dp">
+
+                    <TextView
+                        android:id="@+id/home_farmer"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@mipmap/home_farmer"
+                        android:gravity="center"
+                        android:text="@string/homeFragFarmer" />
+
+                    <TextView
+                        android:id="@+id/home_owner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@mipmap/home_owner"
+                        android:gravity="center"
+                        android:text="@string/locomotiveName" />
+
+                    <TextView
+                        android:id="@+id/home_taskcenter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@mipmap/home_taskcenter"
+                        android:gravity="center"
+                        android:text="@string/homeFragTaskCenter" />
+
+                    <TextView
+                        android:id="@+id/home_flash"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@mipmap/home_flash"
+                        android:gravity="center"
+                        android:text="@string/homeFragTradeAlerts" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@android:color/white"
+                    android:padding="10dp"
+                    android:text="@string/homeFragTaskCenter"
+                    android:textColor="@color/colorGreenDark"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorGreenDark" />
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/home_task_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white" />
+                <!--<ListView-->
+                <!--android:id="@+id/home_task_listview"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:paddingBottom="50dp"-->
+                <!--android:scrollbars="none">-->
+
+                <!--</ListView>-->
+
+                <TextView
+                    android:id="@+id/home_task_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/homeFragClickMore"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:padding="10dp"
+                    android:text="@string/homeFragFarmer"
+                    android:textColor="@color/colorGreenDark"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorGreenDark" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/home_farmer_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white" />
+
+                <!--<GridView-->
+                <!--android:id="@+id/home_farmer_gridview"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:paddingBottom="50dp"-->
+                <!--android:scrollbars="none">-->
+
+                <!--</GridView>-->
+
+                <TextView
+                    android:id="@+id/home_farmer_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/homeFragClickMore"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:padding="10dp"
+                    android:text="@string/locomotiveName"
+                    android:textColor="@color/colorGreenDark"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorGreenDark" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/home_owner_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"></android.support.v7.widget.RecyclerView>
+
+                <!--<GridView-->
+                <!--android:id="@+id/home_owner_gridview"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:paddingBottom="50dp"-->
+                <!--android:scrollbars="none">-->
+
+                <!--</GridView>-->
+
+                <TextView
+                    android:id="@+id/home_owner_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/homeFragClickMore"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp"
+                    android:background="@android:color/white" />
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

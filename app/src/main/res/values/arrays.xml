@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="select_reg_type">
+        <item>农场主</item>
+        <item>农机主</item>
+    </string-array>
+
+    <string-array name="select_user_type">
+        <item>个人</item>
+        <item>公司</item>
+        <item>企业</item>
+    </string-array>
+
+    <string-array name="permit_user">
+        <item>所有用户</item>
+        <item>1星用户</item>
+        <item>2星用户</item>
+        <item>3星用户</item>
+        <item>4星用户</item>
+        <item>5星用户</item>
+        <item>6星用户</item>
+    </string-array>
+
+    <string-array name="loco_nature">
+        <item>耕作</item>
+        <item>收割</item>
+        <item>灌溉</item>
+        <item>运输</item>
+    </string-array>
+</resources>
