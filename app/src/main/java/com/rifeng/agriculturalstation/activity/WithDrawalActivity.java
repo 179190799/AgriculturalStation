@@ -55,7 +55,7 @@ public class WithDrawalActivity extends BaseActivity {
     protected void initData() {
         idTitleMiddle.setText("提现");
         balance.setText(Html.fromHtml("可提现金额：<font color='#FF9F3F'>" +
-                this.getIntent().getExtras().getString("balance") + "</font>元"));
+                this.getIntent().getExtras().getString("balance") + "</font> 元"));
     }
 
     private void submit() {

@@ -126,6 +126,10 @@ public class AccountInfoActivity extends BaseActivity {
 
     }
 
+    public void test() {
+
+    }
+
     @OnClick({R.id.id_title_left, R.id.account_recharge_btn, R.id.account_withdrawal_btn})
     public void onClick(View view) {
         switch (view.getId()) {
