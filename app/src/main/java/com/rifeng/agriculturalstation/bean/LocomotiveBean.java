@@ -10,6 +10,14 @@ import java.util.List;
  */
 public class LocomotiveBean implements Serializable {
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     /**
      * 农机id
      */

@@ -123,11 +123,6 @@ public class AccountInfoActivity extends BaseActivity {
                 accountStartsLl.addView(imageView, params);
             }
         }
-
-    }
-
-    public void test() {
-
     }
 
     @OnClick({R.id.id_title_left, R.id.account_recharge_btn, R.id.account_withdrawal_btn})

@@ -108,7 +108,7 @@ public class LocomotiveListActivity extends BaseActivity {
          */
         anim = ObjectAnimator.ofFloat(idTitleRight, "rotation", 0f, 45f);
         anim.setDuration(200); // 设置动画持续时长
-        // 如果只需要知道一种状态，那么可以使用AnimatorListenerAdapter
+//         如果只需要知道一种状态，那么可以使用AnimatorListenerAdapter
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {

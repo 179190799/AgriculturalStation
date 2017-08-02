@@ -221,6 +221,7 @@ public class AddLocomotiveActivity extends BaseActivity {
                     if(dialog != null && dialog.isShowing()){
                         dialog.dismiss();
                     }
+                    finish();
                     ToastUtil.showShort(mContext, serverResultModel.msg);
                 }
 

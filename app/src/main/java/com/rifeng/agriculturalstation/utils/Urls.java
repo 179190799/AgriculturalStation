@@ -85,4 +85,8 @@ public class Urls {
     public static final String URL_TASK_LIST = SERVER + "app-task-op-all.html";
     // 主页
     public static final String URL_HOME_INFO = SERVER + "app-homeinfo-op-home.html";
+
+    //    删除农机手机车信息
+    public static final String URL_FARMER_LOMOTIVE_INFO = SERVER + "app-locomotive-op-delowner.html";
 }
+

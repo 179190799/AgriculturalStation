@@ -3,13 +3,17 @@ package com.rifeng.agriculturalstation.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,10 +24,14 @@ import com.rifeng.agriculturalstation.bean.LocomotiveBean;
 import com.rifeng.agriculturalstation.bean.ServerResult;
 import com.rifeng.agriculturalstation.callback.JsonCallback;
 import com.rifeng.agriculturalstation.recyclerview.CommonAdapter;
+import com.rifeng.agriculturalstation.recyclerview.MultiItemTypeAdapter;
 import com.rifeng.agriculturalstation.recyclerview.base.ViewHolder;
 import com.rifeng.agriculturalstation.recyclerview.wrapper.HeaderAndFooterWrapper;
 import com.rifeng.agriculturalstation.recyclerview.wrapper.LoadMoreWrapper;
+import com.rifeng.agriculturalstation.utils.AsyncHttpUtil;
+import com.rifeng.agriculturalstation.utils.Consts;
 import com.rifeng.agriculturalstation.utils.CustomProgressDialog;
+import com.rifeng.agriculturalstation.utils.SharedPreferencesUtil;
 import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
 import com.rifeng.agriculturalstation.utils.ViewPagerImageLoader;
@@ -63,7 +71,7 @@ public class LocomotiveDetailsActivity extends BaseActivity {
 
     private View headerView;
     private TextView usernameTV;
-//    private TextView evaluationTV;
+    //    private TextView evaluationTV;
     private CustomProgressDialog dialog;
     private ObjectAnimator anim; // 属性动画
     private String ownerUserName; // 用户名
@@ -155,7 +163,7 @@ public class LocomotiveDetailsActivity extends BaseActivity {
                         if (dialog != null && dialog.isShowing()) {
                             dialog.dismiss();
                         }
-                        if(locomotiveBeen != null){
+                        if (locomotiveBeen != null) {
                             isLoading = locomotiveBeen.size();
                             if (isLoading > 0) {
                                 ownerList.addAll(locomotiveBeen);
@@ -230,7 +238,6 @@ public class LocomotiveDetailsActivity extends BaseActivity {
                 }
             }
         };
-
         mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(mAdapter);
         mLoadMoreWrapper = new LoadMoreWrapper(mHeaderAndFooterWrapper);
 
@@ -270,6 +277,60 @@ public class LocomotiveDetailsActivity extends BaseActivity {
                 }, 2000);
             }
         });
+
+        mAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+            }
+
+            /**
+             * 长按recyclerView删除农机主农耕机信息
+             * @param view
+             * @param holder
+             * @param position
+             * @return
+             */
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, final int position) {
+                Log.e(TAG, "onItemLongClick:position---- " + (position - 1));
+                final int id = ownerList.get(position - 1).getId();
+                final int Uid = (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage("确认删除吗");
+                builder.setTitle("提示");
+                builder.setNegativeButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        判断该机车列表是否是登录账号本人的机车
+                        if (ownerUid == Uid) {
+//                            执行删除
+                            delLocomotive(id);
+                            mAdapter.notifyDataSetChanged();
+//                            重新获取数据
+                            if (ownerList.size() != 0) {
+                                ownerList.clear();
+                            }
+                            start = 0;
+                            getOwnerList(true);
+                            dialog.dismiss();
+                        } else {
+                            ToastUtil.showShort(mContext, "您不是它的主人哦");
+                        }
+                    }
+                });
+
+                builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
+                return true;
+            }
+        });
     }
 
     @OnClick({R.id.id_title_left, R.id.id_title_right})
@@ -283,5 +344,31 @@ public class LocomotiveDetailsActivity extends BaseActivity {
                 anim.start();
                 break;
         }
+    }
+
+    /**
+     * 删除农机主的机车
+     */
+    public void delLocomotive(int id) {
+        OkGo.post(Urls.URL_FARMER_LOMOTIVE_INFO)
+                .params("uid", (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0), true)
+                .params("id", id)
+                .execute(new JsonCallback<ServerResult>() {
+                    @Override
+                    public void onSuccess(ServerResult serverResult, Call call, Response response) {
+                        if (serverResult.code == 200) {
+                            ToastUtil.showShort(mContext, serverResult.msg);
+                        } else {
+                            ToastUtil.showShort(mContext, serverResult.msg);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        ToastUtil.showShort(mContext, "删除失败");
+                    }
+                });
+
     }
 }
