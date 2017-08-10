@@ -116,6 +116,11 @@
     <string name="rechargeNextBtn">下一步</string>
     <string name="rechargeWeiXinPay">微信支付</string>
 
+    <!--支付金额-->
+    <string name="payMoneyString" >支付金额：</string>
+    <string name="payMoneyBalance">您的余额：</string>
+    <string name="payMoneyBalanceRadio">余额支付</string>
+    <string name="payMoneyComplete">完成</string>
     <!--注册-->
     <string name="registerUserNameTips">输入您的用户名</string>
     <string name="registerPwd">密&#160;码</string>
@@ -200,6 +205,7 @@
     <!---->
     <string name="currentPlace">您当前的位置：</string>
     <string name="releaseDemand">发需求</string>
+    <string name="releaseTaskEndTime">竞标截止时间： </string>
 
 
 </resources>

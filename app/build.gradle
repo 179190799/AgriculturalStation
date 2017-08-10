@@ -2,6 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt' // ButterKnife
 
 android {
+
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'MissingTranslation', 'ExtraTranslation'
+
+    }
     signingConfigs {
         release {
             keyAlias 'keystore'
@@ -30,6 +37,8 @@ android {
                 JPUSH_APPKEY : "99090cc925729527a4b325dd", //JPush上注册的包名对应的appkey（*换成你的*）
                 JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
         ]
+
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -46,18 +55,18 @@ android {
 }
 
 dependencies {
+    //    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile files('libs/android-async-http-1.4.8.jar')
-    //    compile files('libs/gson-2.2.4.jar')
+    compile files('libs/gson-2.2.4.jar')
     compile files('libs/universal-image-loader-1.9.3.jar')
     compile files('libs/org.apache.http.legacy.jar')
-    //    compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:recyclerview-v7:23.4.0'
     compile 'com.commit451:PhotoView:1.2.4'
     compile project(':PhotoPicker')
-    //    compile 'com.squareup.okhttp3:okhttp:3.4.2'
+    compile 'com.squareup.okhttp3:okhttp:3.4.2'
     compile files('libs/BaiduLBS_Android.jar')
     compile 'org.greenrobot:eventbus:3.0.0'
     compile project(':okgo')
@@ -71,8 +80,10 @@ dependencies {
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'
     compile files('libs/jcore-android_v1.1.1.jar')
     //极光推送
-    //compile 'cn.jiguang:jpush:2.1.8'
-    compile 'cn.jiguang.sdk:jpush:3.0.3'  // 此处以JPush 3.0.3 版本为例。
-    compile 'cn.jiguang.sdk:jcore:1.1.1'  // 此处以JCore 1.1.1 版本为例。
+    compile 'cn.jiguang.sdk:jpush:3.0.3'
+    // 此处以JPush 3.0.3 版本为例。
+    compile 'cn.jiguang.sdk:jcore:1.1.1'
+    // 此处以JCore 1.1.1 版本为例。
     compile files('libs/alipaySdk-20170309.jar')
+    //    provided files('libs/alipaySdk-20170309.jar')
 }

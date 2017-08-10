@@ -41,7 +41,7 @@ public class WelcomeActivity extends Activity {
 
 
     //设置是否自启动
-    private boolean isGoing ;
+    private boolean isGoing = true ;
 
     private ImageView wel_bg; // 背景图
     private TextView skip_tv; // 跳过
@@ -56,7 +56,6 @@ public class WelcomeActivity extends Activity {
             if (msg.what == 2) {
                 if (isGoing) {
                     startActivity(new Intent(WelcomeActivity.this, TabActivity.class));
-//                overridePendingTransition(R.anim.in_from_right, R.anim.out_from_right);
                     finish();
                 }
 
@@ -79,6 +78,7 @@ public class WelcomeActivity extends Activity {
 
         String newVersionName = AppInfoUtil.getVersionName(this);
         int newVersionCode = AppInfoUtil.getVersionCode(this);
+
         // 是否是第一次安装并运行app
         if (!TextUtils.equals(oldVersionName, newVersionName) && newVersionCode > oldVersionCode) {
             SharedPreferencesUtil.put(this, VERSION_NAME, newVersionName);
@@ -94,15 +94,17 @@ public class WelcomeActivity extends Activity {
             imageLoader.displayImage("drawable://" + R.mipmap.guide1, wel_bg, DisplayImageOptions.createSimple());
 
             isGoing = starActivityByButton();
-            mHandler.sendEmptyMessageDelayed(2, 3000);
-        // 加载欢迎页
-            //loadWelcome();
+            mHandler.sendEmptyMessageDelayed(2, 2000);
         }
     }
 
+    /**
+     * 当按下跳过按钮，则设置isGoing = FALSE，表示不能自启动
+     * @return
+     */
     private boolean starActivityByButton() {
 
-        isGoing = true;
+//        isGoing = true;
         //设置监听事件
         skip_tv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +121,6 @@ public class WelcomeActivity extends Activity {
         return isGoing;
     }
 
-
     /**
      * 生成设备的唯一ID，并存储到SharedPreferences中
      */
@@ -128,11 +129,11 @@ public class WelcomeActivity extends Activity {
         SharedPreferencesUtil.put(this, "token", strMD5Token);
     }
 
-    /**
-     * 加载欢迎页
-     */
-    private void loadWelcome() {
-        startActivity(new Intent(WelcomeActivity.this, TabActivity.class));
-        finish();
-    }
+//    /**
+//     * 加载欢迎页
+//     */
+//    private void loadWelcome() {
+//        startActivity(new Intent(WelcomeActivity.this, TabActivity.class));
+//        finish();
+//    }
 }

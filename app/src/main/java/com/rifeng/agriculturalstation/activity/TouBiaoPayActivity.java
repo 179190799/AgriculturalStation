@@ -22,12 +22,14 @@ import com.rifeng.agriculturalstation.callback.JsonCallback;
 import com.rifeng.agriculturalstation.utils.AsyncHttpUtil;
 import com.rifeng.agriculturalstation.utils.Consts;
 import com.rifeng.agriculturalstation.utils.CustomProgressDialog;
+import com.rifeng.agriculturalstation.utils.LogUtil;
 import com.rifeng.agriculturalstation.utils.SharedPreferencesUtil;
 import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
 
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,11 +63,16 @@ public class TouBiaoPayActivity extends BaseActivity {
     RadioGroup toubiaoRadioGroup;
     @BindView(R.id.toubiao_next_btn)
     Button nextBtn; // 下一步
+    @BindView(R.id.tv_money)
+    TextView payMoney; //投标需要支付的金额
+
 
     private int payType = 1; // 选择支付的方式，默认=1，1支付宝 2微信 3余额
     private double accountBalance; // 余额
     private int taskid;
-//    private double taskPrice; // 任务价格
+    private float joinmoney;
+
+    //    private double taskPrice; // 任务价格
     private CustomProgressDialog dialog;
 
     //1 表示未参与 0表示已参与
@@ -78,14 +85,21 @@ public class TouBiaoPayActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+
         dialog = new CustomProgressDialog(this, "请稍候...");
         idTitleMiddle.setText("支付");
+
 //        taskid = this.getIntent().getExtras().getInt("taskid");
 //        taskPrice = Double.valueOf(this.getIntent().getExtras().getString("payCost"));
+
         Bundle bundle = this.getIntent().getExtras();
         taskid = bundle.getInt("taskid");
+        joinmoney = bundle.getFloat("joinmoney");
+
 //        taskPrice = Double.parseDouble(bundle.getString("payCost"));
 //        payCost.setText(Html.fromHtml("本次需支付金额为：<font color='#FF9F3F'>" + taskPrice + "</font>元"));
+
+        payMoney.setText(joinmoney + "");
         getBalance();
 
         Log.e(TAG, "uid: " + (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0));
@@ -126,24 +140,6 @@ public class TouBiaoPayActivity extends BaseActivity {
             }
         });
     }
-//    private void obtainData() {
-//        OkGo.post(Urls.URL_ACCOUNT_BALANCE)
-//                .tag(this)
-//                .params("uid", (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0))
-//                .execute(new JsonCallback<ServerResult>() {
-//                    @Override
-//                    public void onSuccess(ServerResult serverResult, Call call, Response response) {
-//                        accountBalance = Double.valueOf(serverResult.msg);
-//                        balance.setText(Html.fromHtml("您的账户余额：<font color='#FF9F3F'>" + accountBalance + "</font>元"));
-//                    }
-//
-//                    @Override
-//                    public void onError(Call call, Response response, Exception e) {
-//                        super.onError(call, response, e);
-//                        ToastUtil.showShort(mContext, "获取失败");
-//                    }
-//                });
-//    }
 
     private boolean CheckParams() {
         double taskPrice = 2000;
@@ -166,13 +162,8 @@ public class TouBiaoPayActivity extends BaseActivity {
                 .execute(new JsonCallback<ServerResult>() {
                     @Override
                     public void onSuccess(ServerResult serverResult, Call call, Response response) {
-                        ToastUtil.showShort(TouBiaoPayActivity.this, serverResult.msg);
-                        if (serverResult.code == 200) {
-                            ToastUtil.showShort(mContext, serverResult.msg);
-                            TouBiaoPayActivity.this.finish();
-                        } else if (serverResult.code == 101) {
-                            ToastUtil.showShort(mContext, serverResult.msg);
-                        }
+                        ToastUtil.showShort(mContext, serverResult.msg);
+                        finish();
                     }
 
                     @Override
@@ -200,9 +191,11 @@ public class TouBiaoPayActivity extends BaseActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         payTaskCost();
                                     }
+
                                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        finish();
 
                                     }
                                 }).create();

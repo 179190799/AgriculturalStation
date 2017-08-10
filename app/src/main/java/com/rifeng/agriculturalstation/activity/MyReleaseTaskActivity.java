@@ -121,6 +121,8 @@ public class MyReleaseTaskActivity extends BaseActivity {
         getTaskList(true);
     }
 
+
+
     private void initialize() {
         mSwipeRefresh.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_red_light,
                 android.R.color.holo_orange_light, android.R.color.holo_green_light);
@@ -276,7 +278,7 @@ public class MyReleaseTaskActivity extends BaseActivity {
                         if (taskList.size() != 0) {
                             taskList.clear();
                         }
-                        start = 1;
+                        start = 0;
                         getTaskList(true);
                         mSwipeRefresh.setRefreshing(false);
                     }
@@ -440,5 +442,11 @@ public class MyReleaseTaskActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getTaskList(false);
     }
 }

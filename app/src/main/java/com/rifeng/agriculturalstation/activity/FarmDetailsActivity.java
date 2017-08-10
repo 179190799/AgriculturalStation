@@ -23,7 +23,9 @@ import com.rifeng.agriculturalstation.recyclerview.CommonAdapter;
 import com.rifeng.agriculturalstation.recyclerview.base.ViewHolder;
 import com.rifeng.agriculturalstation.recyclerview.wrapper.HeaderAndFooterWrapper;
 import com.rifeng.agriculturalstation.recyclerview.wrapper.LoadMoreWrapper;
+import com.rifeng.agriculturalstation.utils.Consts;
 import com.rifeng.agriculturalstation.utils.CustomProgressDialog;
+import com.rifeng.agriculturalstation.utils.SharedPreferencesUtil;
 import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
 import com.rifeng.agriculturalstation.utils.ViewPagerImageLoader;
@@ -64,7 +66,7 @@ public class FarmDetailsActivity extends BaseActivity {
 
     private View headerView;
     private TextView usernameTV;
-//    private TextView evaluationTV;
+    private TextView evaluationTV;
     private CustomProgressDialog dialog;
     private ObjectAnimator anim; // 属性动画
     private String farmerUserName; // 用户名
@@ -72,6 +74,7 @@ public class FarmDetailsActivity extends BaseActivity {
     private int start = 0;
     private int perpage = 2;
     private int isLoading = 0;
+    private int regType;
 
     @Override
     protected int getContentViewId() {
@@ -82,6 +85,7 @@ public class FarmDetailsActivity extends BaseActivity {
     protected void initData() {
         farmList = new ArrayList<>();
         dialog = new CustomProgressDialog(this, "拼命加载中...");
+        regType = (int) SharedPreferencesUtil.get(mContext, Consts.USER_REGTYPE, 0);
         idTitleMiddle.setText("农场主");
         Drawable drawableLeft = mContext.getResources().getDrawable(R.mipmap.add_farm_right);
         // 必须设置图片大小，否则不显示
@@ -96,7 +100,11 @@ public class FarmDetailsActivity extends BaseActivity {
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                startActivity(AddFarmActivity.class); // 添加农场
+                if (regType == 1) {
+                    startActivity(AddFarmActivity.class); // 添加农场
+                } else {
+                    ToastUtil.showShort(mContext,"您不是农场主哦");
+                }
             }
         });
 
@@ -106,80 +114,80 @@ public class FarmDetailsActivity extends BaseActivity {
 
         initHeaderView();
         // 获取最新评论
-//        getLatestComments();
+        getLatestComments();
         // 获取农场列表
         getFarmList(true);
         initialize();
     }
 
-//    private void getLatestComments() {
-//        // 拼接参数
-//        OkGo.post(Urls.URL_FARM_COMMENT)
-//            .tag(this)
-//            .params("uid", farmerUid)
-//            .params("type", "farmer")
-//            .execute(new JsonCallback<ServerResult>() {
-//                @Override
-//                public void onSuccess(ServerResult serverResult, Call call, Response response) {
-//                    evaluationTV.setText(serverResult.msg);
-//                }
-//
-//                @Override
-//                public void onError(Call call, Response response, Exception e) {
-//                    super.onError(call, response, e);
-//                    ToastUtil.showShort(mContext, "获取评论失败");
-//                }
-//            });
-//    }
+    private void getLatestComments() {
+        // 拼接参数
+        OkGo.post(Urls.URL_FARM_COMMENT)
+                .tag(this)
+                .params("uid", farmerUid)
+                .params("type", "farmer")
+                .execute(new JsonCallback<ServerResult>() {
+                    @Override
+                    public void onSuccess(ServerResult serverResult, Call call, Response response) {
+                        evaluationTV.setText(serverResult.msg);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        ToastUtil.showShort(mContext, "获取评论失败");
+                    }
+                });
+    }
 
     private void initHeaderView() {
         headerView = View.inflate(this, R.layout.farm_owne_header, null);
         usernameTV = (TextView) headerView.findViewById(R.id.foh_username);
-//        evaluationTV = (TextView) headerView.findViewById(R.id.foh_content);
+        evaluationTV = (TextView) headerView.findViewById(R.id.foh_content);
 
         usernameTV.setText("农场主：" + farmerUserName);
     }
 
     private void getFarmList(boolean isShow) {
-        if(isShow){
+        if (isShow) {
             dialog.show();
         }
         // 拼接参数
         OkGo.post(Urls.URL_FARM_DETAILS)
-            .tag(this)
-            .params("uid", farmerUid)
-            .params("start", start)
-            .params("perpage", perpage)
-            .execute(new JsonCallback<List<FarmBean>>() {
-                @Override
-                public void onSuccess(List<FarmBean> farmBeanList, Call call, Response response) {
-                    if(dialog != null && dialog.isShowing()){
-                        dialog.dismiss();
-                    }
-                    if(farmBeanList != null){
-                        isLoading = farmBeanList.size();
-                        if(isLoading > 0){
-                            farmList.addAll(farmBeanList);
-                            start += isLoading;
+                .tag(this)
+                .params("uid", farmerUid)
+                .params("start", start)
+                .params("perpage", perpage)
+                .execute(new JsonCallback<List<FarmBean>>() {
+                    @Override
+                    public void onSuccess(List<FarmBean> farmBeanList, Call call, Response response) {
+                        if (dialog != null && dialog.isShowing()) {
+                            dialog.dismiss();
                         }
-                        if (isLoading < perpage) {
-                            mLoadMoreWrapper.setLoadMoreView(0);
-                        }else {
-                            mLoadMoreWrapper.setLoadMoreView(R.layout.default_loading);
+                        if (farmBeanList != null) {
+                            isLoading = farmBeanList.size();
+                            if (isLoading > 0) {
+                                farmList.addAll(farmBeanList);
+                                start += isLoading;
+                            }
+                            if (isLoading < perpage) {
+                                mLoadMoreWrapper.setLoadMoreView(0);
+                            } else {
+                                mLoadMoreWrapper.setLoadMoreView(R.layout.default_loading);
+                            }
+                            mLoadMoreWrapper.notifyDataSetChanged();
                         }
-                        mLoadMoreWrapper.notifyDataSetChanged();
                     }
-                }
 
-                @Override
-                public void onError(Call call, Response response, Exception e) {
-                    super.onError(call, response, e);
-                    ToastUtil.showShort(mContext, "加载失败");
-                    if(dialog != null && dialog.isShowing()){
-                        dialog.dismiss();
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        ToastUtil.showShort(mContext, "加载失败");
+                        if (dialog != null && dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
                     }
-                }
-            });
+                });
     }
 
     private void initialize() {
@@ -200,7 +208,7 @@ public class FarmDetailsActivity extends BaseActivity {
                 // 农场所在地
                 holder.setText(R.id.farm_details_address, "农场所在地：" + farmBean.farmaddress);
                 // 相关图片
-                if(farmBean.picarr != null && farmBean.picarr.size() > 0){
+                if (farmBean.picarr != null && farmBean.picarr.size() > 0) {
                     Banner banner = holder.getView(R.id.banner);
                     banner.setImages(farmBean.picarr).setImageLoader(new ViewPagerImageLoader()).start();
                     banner.setOnBannerListener(new OnBannerListener() {

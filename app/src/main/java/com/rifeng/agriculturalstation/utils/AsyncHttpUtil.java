@@ -3,6 +3,8 @@ package com.rifeng.agriculturalstation.utils;
 import android.content.Context;
 
 import com.loopj.android.http.*;
+import com.rifeng.agriculturalstation.bean.ServerResult;
+import com.rifeng.agriculturalstation.callback.JsonCallback;
 
 /**
  * 对AsyncHttpClient的get或post等方法发起的网络请求进行封装
@@ -97,4 +99,6 @@ public class AsyncHttpUtil {
         client.cancelRequests(context,mayInterruptIfRunning);
         return mayInterruptIfRunning;
     }
+
+
 }

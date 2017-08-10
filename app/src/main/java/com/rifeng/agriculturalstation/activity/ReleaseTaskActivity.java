@@ -3,6 +3,9 @@ package com.rifeng.agriculturalstation.activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -19,7 +22,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.request.BaseRequest;
 import com.rifeng.agriculturalstation.BaseActivity;
 import com.rifeng.agriculturalstation.R;
-import com.rifeng.agriculturalstation.bean.ServerResultModel;
+import com.rifeng.agriculturalstation.bean.ServerReleaseTaskBean;
 import com.rifeng.agriculturalstation.callback.JsonCallback;
 import com.rifeng.agriculturalstation.utils.ChangeAddressPopwindow;
 import com.rifeng.agriculturalstation.utils.Consts;
@@ -78,6 +81,8 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
     Spinner mSpinner;
     @BindView(R.id.recycler_view)
     MultiPickResultView recyclerView;
+    @BindView(R.id.rt_end_time_et)
+    TextView rtEndTime;//竞标截止日期
 
     private String defaultProvince = "广西"; // 省份，默认值
     private String defaultCity = "南宁"; // 城市，默认值
@@ -86,6 +91,7 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
     private int mDay; // 日
     private String[] mItems;
     private int needstar; // 可接用户
+    private int startactivity = 2; //表示本页面启动的支付保证金页面
     private CustomProgressDialog dialog;
     private List<String> selectImgs;
     private List<File> fileList = new ArrayList<>();
@@ -225,39 +231,52 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
 
         // 拼接参数
         OkGo.post(Urls.URL_RELEASE_TASK)
-            .tag(this)
-            .params(params)
-            .params("uid", (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0), true)
-            .params("name", rtTaskName.getText().toString().trim())
-            .params("content", rtTaskDescribe.getText().toString().trim())
-            .params("operatingarea", rtWorkArea.getText().toString().trim())
-            .params("timelimit", rtScheduleEt.getText().toString().trim())
-            .params("limitedprice", rtBiddingEt.getText().toString().trim())
-            .params("totalprice", rtTotalpriceEt.getText().toString().trim())
-            .params("starttime", DateUtil.getTimeStamp(rtWorktimeEt.getText().toString().trim(), "yyyy-MM-dd"))
-            .params("detailaddress", rtAddress.getText().toString().trim())
-            .params("needstar", needstar)
-            .params("provinces", defaultProvince)
-            .params("city", defaultCity)
-            .execute(new JsonCallback<ServerResultModel>() {
-                @Override
-                public void onBefore(BaseRequest request) {
-                    super.onBefore(request);
-                }
+                .tag(this)
+                .params(params)
+                .params("uid", (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0), true)
+                .params("name", rtTaskName.getText().toString().trim())
+                .params("content", rtTaskDescribe.getText().toString().trim())
+                .params("operatingarea", rtWorkArea.getText().toString().trim())
+                .params("timelimit", rtScheduleEt.getText().toString().trim())
+                .params("limitedprice", rtBiddingEt.getText().toString().trim())
+                .params("totalprice", rtTotalpriceEt.getText().toString().trim())
+                .params("starttime", DateUtil.getTimeStamp(rtWorktimeEt.getText().toString().trim(), "yyyy-MM-dd"))
+                .params("enddate", DateUtil.getTimeStamp(rtEndTime.getText().toString().trim(), "yyyy-MM-dd"))
+                .params("detailaddress", rtAddress.getText().toString().trim())
+                .params("needstar", needstar)
+                .params("provinces", defaultProvince)
+                .params("city", defaultCity)
+                .execute(new JsonCallback<ServerReleaseTaskBean>() {
+                    @Override
+                    public void onBefore(BaseRequest request) {
+                        super.onBefore(request);
+                    }
 
-                @Override
-                public void onSuccess(ServerResultModel serverResultModel, Call call, Response response) {
-                    ToastUtil.showShort(mContext, serverResultModel.msg);
-                    dialog.dismiss();
-                }
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void onSuccess(ServerReleaseTaskBean serverReleaseTaskBean, Call call, Response response) {
+                        if (serverReleaseTaskBean.getCode() == 200) {
+                            ToastUtil.showShort(mContext, serverReleaseTaskBean.msg);
 
-                @Override
-                public void onError(Call call, Response response, Exception e) {
-                    super.onError(call, response, e);
-                    ToastUtil.showShort(mContext, "提交失败");
-                    dialog.dismiss();
-                }
-            });
+                            int taskid = serverReleaseTaskBean.getTaskid();//发布的项目id
+                            double taskmoney = serverReleaseTaskBean.getTaskmoney();//发布项目需要付的项目保证金
+                            Bundle bundle = new Bundle();
+                            bundle.putDouble("taskmoney", taskmoney);
+                            bundle.putInt("taskid", taskid);
+                            bundle.putInt("startactivity",startactivity);
+                            startActivity(PayProjectBond.class, bundle);
+                            dialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        ToastUtil.showShort(mContext, "提交失败");
+                        dialog.dismiss();
+                    }
+                });
     }
 
 
@@ -280,7 +299,7 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
         }
     }
 
-    @OnClick({R.id.id_title_left, R.id.id_title_right, R.id.rt_task_describe, R.id.rt_worktime_et, R.id.rt_place_tv, R.id.rt_address})
+    @OnClick({R.id.id_title_left, R.id.id_title_right, R.id.rt_task_describe, R.id.rt_worktime_et, R.id.rt_place_tv, R.id.rt_address, R.id.rt_end_time_et})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.id_title_left: // 返回
@@ -298,9 +317,33 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
                 showDateDialog();
                 break;
 
+            case R.id.rt_end_time_et: // 进场开工时间
+
+                new DatePickerDialog(ReleaseTaskActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String selMonth = "";
+                        String selDay = "";
+                        if ((monthOfYear + 1) < 10) {
+                            selMonth = "0" + (monthOfYear + 1);
+                        } else {
+                            selMonth = "" + (monthOfYear + 1);
+                        }
+                        if (dayOfMonth < 10) {
+                            selDay = "0" + dayOfMonth;
+                        } else {
+                            selDay = "" + dayOfMonth;
+                        }
+                        rtEndTime.setText(year + "-" + selMonth + "-" + selDay);
+                    }
+                }, mYear, mMonth, mDay).show();
+
+                break;
+
             case R.id.rt_place_tv: // 所在区域
                 selectNativePlace();
                 break;
+
         }
     }
 }

@@ -25,6 +25,7 @@ import com.rifeng.agriculturalstation.recyclerview.base.ViewHolder;
 import com.rifeng.agriculturalstation.recyclerview.wrapper.HeaderAndFooterWrapper;
 import com.rifeng.agriculturalstation.recyclerview.wrapper.LoadMoreWrapper;
 import com.rifeng.agriculturalstation.utils.CustomProgressDialog;
+import com.rifeng.agriculturalstation.utils.DateUtil;
 import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
 
@@ -107,7 +108,7 @@ public class SearchActivity extends BaseActivity {
                 holder.setText(R.id.taskcenter_item_area, "作业面积：" + taskBean.operatingarea + "亩");
                 holder.setText(R.id.taskcenter_item_totalPrice, "项目款：￥" + taskBean.totalprice);
                 holder.setText(R.id.taskcenter_item_undertakeType, taskBean.meetuser);
-                holder.setText(R.id.taskcenter_item_endtime, "竞标截止日期：" + taskBean.endtime);
+                holder.setText(R.id.taskcenter_item_endtime, "竞标截止日期：" + DateUtil.getTime(taskBean.enddate + "", "yyyy-MM-dd"));
             }
         };
 

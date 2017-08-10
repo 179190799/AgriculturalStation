@@ -71,7 +71,7 @@ public class LocomotiveDetailsActivity extends BaseActivity {
 
     private View headerView;
     private TextView usernameTV;
-    //    private TextView evaluationTV;
+    private TextView evaluationTV;
     private CustomProgressDialog dialog;
     private ObjectAnimator anim; // 属性动画
     private String ownerUserName; // 用户名
@@ -79,6 +79,7 @@ public class LocomotiveDetailsActivity extends BaseActivity {
     private int start = 0;
     private int perpage = 2;
     private int isLoading = 0;
+    private int regType;
 
     @Override
     protected int getContentViewId() {
@@ -90,6 +91,7 @@ public class LocomotiveDetailsActivity extends BaseActivity {
         ownerList = new ArrayList<>();
         dialog = new CustomProgressDialog(this, "拼命加载中...");
         idTitleMiddle.setText("农机手");
+        regType = (int) SharedPreferencesUtil.get(mContext, Consts.USER_REGTYPE, 0);
         Drawable drawableLeft = mContext.getResources().getDrawable(R.mipmap.add_farm_right);
         // 必须设置图片大小，否则不显示
         drawableLeft.setBounds(0, 0, drawableLeft.getMinimumWidth(), drawableLeft.getMinimumHeight());
@@ -103,7 +105,11 @@ public class LocomotiveDetailsActivity extends BaseActivity {
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                startActivity(AddLocomotiveActivity.class); // 添加农机
+                if (regType == 2) {
+                    startActivity(AddLocomotiveActivity.class); // 添加农机
+                } else {
+                    ToastUtil.showShort(mContext, "您不是农机主哦");
+                }
             }
         });
 
@@ -113,36 +119,36 @@ public class LocomotiveDetailsActivity extends BaseActivity {
 
         initHeaderView();
         // 获取最新评论
-//        getLatestComments();
+        getLatestComments();
         // 获取农机列表
         getOwnerList(true);
         initialize();
     }
 
-//    private void getLatestComments() {
-//        // 拼接参数
-//        OkGo.post(Urls.URL_FARM_COMMENT)
-//                .tag(this)
-//                .params("uid", ownerUid)
-//                .params("type", "owner")
-//                .execute(new JsonCallback<ServerResult>() {
-//                    @Override
-//                    public void onSuccess(ServerResult serverResult, Call call, Response response) {
-//                        evaluationTV.setText(serverResult.msg);
-//                    }
-//
-//                    @Override
-//                    public void onError(Call call, Response response, Exception e) {
-//                        super.onError(call, response, e);
-//                        ToastUtil.showShort(mContext, "获取评论失败");
-//                    }
-//                });
-//    }
+    private void getLatestComments() {
+        // 拼接参数
+        OkGo.post(Urls.URL_FARM_COMMENT)
+                .tag(this)
+                .params("uid", ownerUid)
+                .params("type", "owner")
+                .execute(new JsonCallback<ServerResult>() {
+                    @Override
+                    public void onSuccess(ServerResult serverResult, Call call, Response response) {
+                        evaluationTV.setText(serverResult.msg);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        ToastUtil.showShort(mContext, "获取评论失败");
+                    }
+                });
+    }
 
     private void initHeaderView() {
         headerView = View.inflate(this, R.layout.farm_owne_header, null);
         usernameTV = (TextView) headerView.findViewById(R.id.foh_username);
-//        evaluationTV = (TextView) headerView.findViewById(R.id.foh_content);
+        evaluationTV = (TextView) headerView.findViewById(R.id.foh_content);
 
         usernameTV.setText("农机主：" + ownerUserName);
     }

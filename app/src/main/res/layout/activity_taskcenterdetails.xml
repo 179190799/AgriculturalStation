@@ -46,8 +46,8 @@
                 android:id="@+id/alltask_details_crops"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
                 android:layout_marginBottom="5dp"
+                android:paddingLeft="10dp"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="16sp" />
 
@@ -125,6 +125,51 @@
                 android:padding="5dp"
                 android:text="具体地址：广西南宁市西乡塘区西十路罗文村宏兴农场"
                 android:textSize="16sp" />
+
+            <LinearLayout
+                android:id="@+id/ll_pay_pass"
+                android:padding="5dp"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="审核状态："
+                    android:layout_width="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/pay_pass"
+                    android:text="未审核"
+                    android:textColor="@android:color/holo_red_light"
+                    android:layout_width="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/ll_pay_status"
+                android:padding="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="支付状态："
+                    android:layout_width="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/pay_status"
+                    android:text="未支付项目保证金，点我支付"
+                    android:textColor="@android:color/holo_red_light"
+                    android:layout_width="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
 
             <!--进行中的任务的内容-->
             <LinearLayout

@@ -93,13 +93,31 @@ public class TaskCenterDetailsActivity extends BaseActivity {
     @BindView(R.id.banner)
     Banner banner; // 轮播图
 
+    @BindView(R.id.ll_pay_status)
+    LinearLayout ll_pay_status;//支付状态父布局
+    @BindView(R.id.ll_pay_pass)
+    LinearLayout ll_pay_pass;//审核状态父布局
+    @BindView(R.id.pay_status)
+    TextView pay_status;//支付状态
+    @BindView(R.id.pay_pass)
+    TextView pay_pass;//审核状态
+
+
     private TaskBean taskBean;
     private int accountlevel;  //客户星级
     private String payCost; // 项目款
+    private float joinmoney; //任务投标所需交付的保证金
     private int regType; // 发布的任务（农场主 1）/ 参与的任务（农机手 2）
     private int taskid;
-    private CustomProgressDialog dialog;
+//    private CustomProgressDialog dialog;
     private ArrayList<StagesPayBean> stagesPayList = new ArrayList<>();
+
+    private int status;//支付状态，判断农场主是否已经支付发布任务的项目保证金，0未支付，1已支付
+    private int pass;//审核状态，审核农场主发布的任务，1表示已审核，不用判断status。否则进一步判断status
+    private double taskmoney; //发布项目需要付的项目保证金
+    private int taskUId;//发布该任务的农场主ID
+    private int uid;//本次登录的账号id
+    private int startactivity=1;//表示本页面启动的
 
 
     @Override
@@ -109,13 +127,18 @@ public class TaskCenterDetailsActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        dialog = new CustomProgressDialog(this, "正在加载...");
+//        dialog = new CustomProgressDialog(this, "正在加载...");
         // 获取注册类型，农场主/农机手
         regType = (int) SharedPreferencesUtil.get(mContext, Consts.USER_REGTYPE, 0);
         idTitleMiddle.setText("任务详情");
         taskBean = (TaskBean) getIntent().getExtras().getSerializable("TaskBean");
-
-
+        joinmoney = taskBean.joinmoney;
+        taskid = taskBean.id;
+        status = taskBean.status;
+        pass = taskBean.pass;
+        taskmoney = taskBean.taskmoney;
+        taskUId = taskBean.uid;
+        uid = (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0);
         if (taskBean.picarr != null && taskBean.picarr.size() > 0) {
             banner.setImages(taskBean.picarr).setImageLoader(new ViewPagerImageLoader()).start();
             banner.setOnBannerListener(new OnBannerListener() {
@@ -130,14 +153,35 @@ public class TaskCenterDetailsActivity extends BaseActivity {
         } else {
             banner.setBackgroundResource(R.mipmap.no_picture);
         }
-
+        Log.e(TAG, "------ taskBean.id : ------ " + taskBean.id);
         setDatas();
         getAccountLevel();
     }
 
+    /**
+     * 初始化控件，并设置数据
+     */
     private void setDatas() {
-        Log.e(TAG, "------------setDatas -------------");
-        taskid = taskBean.id;
+        LogUtil.e("status:"+status);
+        LogUtil.e("pass:"+pass);
+
+        ll_pay_pass.setVisibility(View.VISIBLE);
+        ll_pay_status.setVisibility(View.VISIBLE);
+            if (pass != 1) {//未审核
+                if (status != 1) {//未支付
+                    pay_status.setEnabled(true);
+                } else {
+                    pay_status.setText("已支付");
+                    pay_status.setEnabled(false);
+                }
+            } else {
+                pay_pass.setText("已审核");
+                ll_pay_status.setVisibility(View.GONE);
+            }
+
+
+
+
         switch (taskBean.curstatu) {
             case 1: // 竞标中
                 joinbtn.setText("参与投标");
@@ -173,7 +217,7 @@ public class TaskCenterDetailsActivity extends BaseActivity {
         participationnum.setText(Html.fromHtml("目前已有<font color='#228793'>" +
                 taskBean.participationnum + "</font>人参与投标"));
         // 截止时间
-        endTime.setText("截止日期：" + DateUtil.getTime(taskBean.endtime + "", "yyyy-MM-dd"));
+        endTime.setText("截止日期：" + DateUtil.getTime(taskBean.enddate + "", "yyyy-MM-dd"));
         // 详细地址
         address.setText("具体地址：" + taskBean.detailaddress);
 
@@ -217,6 +261,7 @@ public class TaskCenterDetailsActivity extends BaseActivity {
         super.onResume();
         LogUtil.i("TAG", "TaskCenterDetailsActivity ---> onResume");
         getStagesPay();
+        setDatas();
     }
 
 
@@ -225,7 +270,7 @@ public class TaskCenterDetailsActivity extends BaseActivity {
         if (stagesPayList != null && stagesPayList.size() > 0) {
             stagesPayList.clear();
         }
-        dialog.show();
+//        dialog.show();
         // 拼接参数
         OkGo.post(Urls.URL_TASK_PAY_STAGES)
                 .tag(this)
@@ -233,9 +278,9 @@ public class TaskCenterDetailsActivity extends BaseActivity {
                 .execute(new JsonCallback<List<StagesPayBean>>() {
                     @Override
                     public void onSuccess(List<StagesPayBean> stagesPayBeens, Call call, Response response) {
-                        if (dialog != null && dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
+//                        if (dialog != null && dialog.isShowing()) {
+//                            dialog.dismiss();
+//                        }
                         if (stagesPayBeens.size() > 0) {
                             stagesPayList.addAll(stagesPayBeens);
                         }
@@ -245,9 +290,9 @@ public class TaskCenterDetailsActivity extends BaseActivity {
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         ToastUtil.showShort(mContext, "网络错误");
-                        if (dialog != null && dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
+//                        if (dialog != null && dialog.isShowing()) {
+//                            dialog.dismiss();
+//                        }
                     }
                 });
     }
@@ -280,11 +325,29 @@ public class TaskCenterDetailsActivity extends BaseActivity {
 //                });
 //    }
 
-    @OnClick({R.id.id_title_left, R.id.alltask_details_joinbtn})
+    @OnClick({R.id.id_title_left, R.id.alltask_details_joinbtn, R.id.pay_status})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.id_title_left: // 返回
                 finish();
+                break;
+            case R.id.pay_status://支付保证金
+
+                if (regType == 1) {
+
+                    if (taskUId == uid) {//证明发布该任务的农场主和登录账号的农场主为一个人可以继续操作
+                        Bundle bundle = new Bundle();
+                        bundle.putDouble("taskmoney", taskmoney);
+                        bundle.putInt("taskid", taskid);
+                        bundle.putInt("startactivity", startactivity);
+                        startActivity(PayProjectBond.class, bundle);
+                    } else {
+                        ToastUtil.showShort(mContext, "该任务不是您发布的！");
+                    }
+
+                } else {
+                    ToastUtil.showShort(mContext,"农机主不能进行该操作！");
+                }
                 break;
 
             case R.id.alltask_details_joinbtn: // 参与投标
@@ -297,10 +360,11 @@ public class TaskCenterDetailsActivity extends BaseActivity {
                                 Bundle bundle = new Bundle();
                                 bundle.putString("payCost", payCost);
                                 bundle.putInt("taskid", taskid);
+                                bundle.putFloat("joinmoney", joinmoney);
                                 startActivity(TouBiaoPayActivity.class, bundle);
 
                             } else {
-                                ToastUtil.showLong(this, "您的等级不足");
+                                ToastUtil.showLong(this, "您的等级不足！");
                             }
 
 
@@ -340,6 +404,9 @@ public class TaskCenterDetailsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 开启异步线程获取用户星级
+     */
     private void getAccountLevel() {
         Log.e(TAG, "------------obtainData -------------");
         RequestParams params = new RequestParams();
@@ -363,4 +430,6 @@ public class TaskCenterDetailsActivity extends BaseActivity {
             }
         });
     }
+
+
 }

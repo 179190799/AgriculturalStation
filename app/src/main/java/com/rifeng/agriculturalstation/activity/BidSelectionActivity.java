@@ -152,7 +152,6 @@ public class BidSelectionActivity extends BaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
 //                        if (taskList.size() != 0) {
 //
 //                            taskList.clear();
@@ -163,7 +162,7 @@ public class BidSelectionActivity extends BaseActivity {
                             userList.clear();
                             Log.e(TAG, "isclear:222222222222222 ");
                         }
-                        start = 1;
+                        start = 0;
                         getDatas(true);
                         mSwipeRefresh.setRefreshing(false);
                     }

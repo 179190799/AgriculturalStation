@@ -35,11 +35,6 @@ import cn.jpush.android.api.JPushInterface;
  */
 public class BaseApplication extends Application {
 
-
-
-
-
-
     public static File cacheFile;
     /**
      * 百度定位
@@ -52,6 +47,7 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
         Runtime rt = Runtime.getRuntime();

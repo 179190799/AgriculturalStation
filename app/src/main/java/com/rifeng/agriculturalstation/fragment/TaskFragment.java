@@ -43,6 +43,7 @@ import com.rifeng.agriculturalstation.utils.BroadCastManager;
 import com.rifeng.agriculturalstation.utils.CityJson;
 import com.rifeng.agriculturalstation.utils.Consts;
 import com.rifeng.agriculturalstation.utils.CustomProgressDialog;
+import com.rifeng.agriculturalstation.utils.DateUtil;
 import com.rifeng.agriculturalstation.utils.LogUtil;
 import com.rifeng.agriculturalstation.utils.SharedPreferencesUtil;
 import com.rifeng.agriculturalstation.utils.ToastUtil;
@@ -231,7 +232,7 @@ public class TaskFragment extends BaseFragment {
                 holder.setText(R.id.taskcenter_item_area, "作业面积：" + taskBean.operatingarea + "亩");
                 holder.setText(R.id.taskcenter_item_totalPrice, "项目款：￥" + taskBean.totalprice);
                 holder.setText(R.id.taskcenter_item_undertakeType, taskBean.meetuser);
-                holder.setText(R.id.taskcenter_item_endtime, "竞标截止日期：" + taskBean.endtime);
+                holder.setText(R.id.taskcenter_item_endtime, "竞标截止日期：" + DateUtil.getTime(taskBean.enddate + "", "yyyy-MM-dd"));
             }
         };
 

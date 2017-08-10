@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * 任务
- *
+ * <p>
  * Created by chw on 2016/11/1.
  */
 public class TaskBean implements Serializable {
@@ -17,13 +17,31 @@ public class TaskBean implements Serializable {
     /**
      * 标题
      */
+
     public String name;
     /**
      * 农作物
      */
     public String content;
+
+
+    //需要支付的投标保证金
+    public float joinmoney;
+
+    //审核状态，0：未审核，1：已审核
+    public int pass;
+
+    //项目保证金的支付状态 ， 1：已支付。0：未支付
+    public int status;
+
+    //需要支付的项目保证金
+    public int taskmoney;
+
+    //发布改任务的农场主id
+    public int uid;
+
     /**
-     *  所需的星级
+     * 所需的星级
      */
     public int needstar;
     /**
@@ -53,7 +71,7 @@ public class TaskBean implements Serializable {
     /**
      * 截止时间
      */
-    public int endtime;
+    public int enddate;
     /**
      * 当前状态，1 竞标中  2 作业中  3 已结束
      */

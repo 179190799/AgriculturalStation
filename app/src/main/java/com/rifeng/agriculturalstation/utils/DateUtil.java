@@ -46,10 +46,14 @@ public class DateUtil {
      * @return 格式化时间（字符串）
      */
     public static String getTime(String time, String type){
-        SimpleDateFormat sdf = new SimpleDateFormat(type);
-        long lcc = Long.parseLong(time);
-        String times = sdf.format(new Date(lcc * 1000L));
-        return times;
+
+        if (!time.equals("0")) {
+            SimpleDateFormat sdf = new SimpleDateFormat(type);
+            long lcc = Long.parseLong(time);
+            String times = sdf.format(new Date(lcc * 1000L));
+            return times;
+        }
+        return "0";
     }
 
     /**

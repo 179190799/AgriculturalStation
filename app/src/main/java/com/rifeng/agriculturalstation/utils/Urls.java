@@ -88,5 +88,8 @@ public class Urls {
 
     //    删除农机手机车信息
     public static final String URL_FARMER_LOMOTIVE_INFO = SERVER + "app-locomotive-op-delowner.html";
+    //支付项目保证金
+    public static final String URL_PAY_PROJECT_BOND= SERVER + "app-task-op-paytask.html";
+
 }
 

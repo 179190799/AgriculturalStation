@@ -183,7 +183,7 @@ public class HomeFragment extends BaseFragment {
                 holder.setText(R.id.taskcenter_item_area, "作业面积：" + taskBean.operatingarea + "亩");
                 holder.setText(R.id.taskcenter_item_totalPrice, "项目款：￥" + taskBean.totalprice);
                 holder.setText(R.id.taskcenter_item_undertakeType, taskBean.needstar + "星以上用户可接");
-                holder.setText(R.id.taskcenter_item_endtime, "竞标截止日期：" + DateUtil.getTime(taskBean.endtime + "", "yyyy-MM-dd"));
+                holder.setText(R.id.taskcenter_item_endtime, "竞标截止日期：" + DateUtil.getTime(taskBean.enddate + "", "yyyy-MM-dd"));
             }
         };
 

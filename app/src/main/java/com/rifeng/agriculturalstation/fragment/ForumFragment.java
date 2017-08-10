@@ -79,6 +79,10 @@ public class ForumFragment extends BaseFragment {
 
         initialize();
 
+        int uid = (int) SharedPreferencesUtil.get(getActivity(), Consts.USER_UID, 0);
+        Log.e("TAG", "------------- uid: -------------"+uid);
+
+
     }
 
     /**
@@ -90,13 +94,12 @@ public class ForumFragment extends BaseFragment {
             return;
         } else {
             LogUtil.i("TAG", "ForumFragment --- UI布局可见");
-            Log.e("TAG", "11111111111111111111");
             addDatas(false);
         }
     }
 
     private void initialize() {
-        Log.e("TAG", "222222222222222");
+
         mSwipeRefresh.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_red_light,
                 android.R.color.holo_orange_light, android.R.color.holo_green_light);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
