@@ -33,9 +33,9 @@ android {
         }
 
         manifestPlaceholders = [
-                JPUSH_PKGNAME: applicationId,
-                JPUSH_APPKEY : "99090cc925729527a4b325dd", //JPush上注册的包名对应的appkey（*换成你的*）
-                JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
+                GETUI_APP_ID : "q2CVCIbRZW9BSAx8Wjj049",
+                GETUI_APP_KEY : "8rluKDsYgj8UDq4LNMUBCA",
+                GETUI_APP_SECRET : "ppB0IXTNcv5K4GdfrzQj44"
         ]
 
         multiDexEnabled true
@@ -79,11 +79,13 @@ dependencies {
     // 微信支付
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'
     compile files('libs/jcore-android_v1.1.1.jar')
-    //极光推送
-    compile 'cn.jiguang.sdk:jpush:3.0.3'
-    // 此处以JPush 3.0.3 版本为例。
-    compile 'cn.jiguang.sdk:jcore:1.1.1'
+//    //极光推送
+//    compile 'cn.jiguang.sdk:jpush:3.0.3'
+//    // 此处以JPush 3.0.3 版本为例。
+//    compile 'cn.jiguang.sdk:jcore:1.1.1'
     // 此处以JCore 1.1.1 版本为例。
     compile files('libs/alipaySdk-20170309.jar')
-    //    provided files('libs/alipaySdk-20170309.jar')
+    compile 'com.getui:sdk:2.10.2.0'
+    compile 'com.android.support:support-v4:+'
+
 }

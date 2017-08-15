@@ -126,7 +126,7 @@ public class PayProjectBond extends BaseActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     payTaskMoney();
 //                    backActivity();
-                    defaultFinish();
+//                    defaultFinish();
                 }
             });
             builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -142,30 +142,6 @@ public class PayProjectBond extends BaseActivity {
             ToastUtil.showShort(this, "抱歉，尚未开通该功能。");
         }
     }
-
-    /**
-     * 返回启动该页面支付的页面
-     */
-    public void backActivity() {
-        MyReleaseTaskActivity mtk = new MyReleaseTaskActivity();
-        ReleaseTaskActivity rta = new ReleaseTaskActivity();
-        if (startactivity == 1) {//ReleaseTaskActivity 。 发布页面启动的
-            if (ActivityCollector.activities.contains(mtk)) {
-                ActivityCollector.removeActivity(mtk);
-                startActivity(MyReleaseTaskActivity.class);
-            } else {
-                startActivity(MyReleaseTaskActivity.class);
-            }
-        } else if (startactivity == 2) {//ReleaseTaskActivity。任务详情页面启动的
-            if (ActivityCollector.activities.contains(rta)) {
-                ActivityCollector.removeActivity(rta);
-                startActivity(ReleaseTaskActivity.class);
-            } else {
-                startActivity(ReleaseTaskActivity.class);
-            }
-        }
-    }
-
 
 
     /**
@@ -184,6 +160,8 @@ public class PayProjectBond extends BaseActivity {
                         ToastUtil.showShort(mContext, "支付成功");
                         if (serverResult.code == 200) {
                             ToastUtil.showShort(mContext, serverResult.msg);
+                            finish();
+
                         }
                     }
 
@@ -196,6 +174,7 @@ public class PayProjectBond extends BaseActivity {
                             e1.printStackTrace();
                         }
                         ToastUtil.showShort(mContext, "支付失败");
+                        finish();
                     }
                 });
     }

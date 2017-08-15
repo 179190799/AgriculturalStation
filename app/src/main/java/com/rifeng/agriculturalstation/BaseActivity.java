@@ -10,9 +10,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.igexin.sdk.PushManager;
 import com.lzy.okgo.OkGo;
 import com.rifeng.agriculturalstation.bean.ServerResult;
 import com.rifeng.agriculturalstation.callback.JsonCallback;
+import com.rifeng.agriculturalstation.service.IntentService;
+import com.rifeng.agriculturalstation.service.PushService;
 import com.rifeng.agriculturalstation.utils.ActivityCollector;
 import com.rifeng.agriculturalstation.utils.AsyncHttpUtil;
 import com.rifeng.agriculturalstation.utils.Consts;
@@ -55,6 +58,11 @@ public abstract class BaseActivity extends AppCompatActivity {
             this.setContentView(getContentViewId());
             ActivityCollector.addActivity(this);
         }
+        // com.getui.demo.DemoPushService 为第三方自定义推送服务
+        PushManager.getInstance().initialize(this.getApplicationContext(), PushService.class);
+        // com.getui.demo.DemoIntentService 为第三方自定义的推送服务事件接收类
+        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), IntentService.class);
+
         this.initData();
     }
 

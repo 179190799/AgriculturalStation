@@ -16,6 +16,7 @@ import android.view.View;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.Poi;
+import com.igexin.sdk.PushManager;
 import com.lzy.okgo.OkGo;
 import com.rifeng.agriculturalstation.BaseApplication;
 import com.rifeng.agriculturalstation.R;
@@ -26,7 +27,9 @@ import com.rifeng.agriculturalstation.fragment.GrabFragment;
 import com.rifeng.agriculturalstation.fragment.HomeFragment;
 import com.rifeng.agriculturalstation.fragment.MineFragment;
 import com.rifeng.agriculturalstation.fragment.TaskFragment;
+import com.rifeng.agriculturalstation.service.IntentService;
 import com.rifeng.agriculturalstation.service.LocationService;
+import com.rifeng.agriculturalstation.service.PushService;
 import com.rifeng.agriculturalstation.utils.ActivityCollector;
 import com.rifeng.agriculturalstation.utils.BroadCastManager;
 import com.rifeng.agriculturalstation.utils.Consts;
@@ -76,6 +79,11 @@ public class TabActivity extends FragmentActivity implements ViewPager.OnPageCha
         locationService.registerListener(mListener);
         // 开启定位
         locationService.start(); // 定位SDK
+
+        // com.getui.demo.DemoPushService 为第三方自定义推送服务
+        PushManager.getInstance().initialize(this.getApplicationContext(), PushService.class);
+        // com.getui.demo.DemoIntentService 为第三方自定义的推送服务事件接收类
+        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), IntentService.class);
 
         // register EventBus
         EventBus.getDefault().register(this);

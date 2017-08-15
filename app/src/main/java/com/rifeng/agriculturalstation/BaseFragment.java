@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -48,14 +49,17 @@ public abstract class BaseFragment extends Fragment {
         initData();
     }
 
+    /**
+     * 实现Fragment数据的缓加载
+     * @param isVisibleToUser
+     */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-
-        if(getUserVisibleHint()){
+        if (getUserVisibleHint()) {
             isVisible = true;
             onVisible();
-        }else {
+        } else {
             isVisible = false;
             onInvisible();
         }

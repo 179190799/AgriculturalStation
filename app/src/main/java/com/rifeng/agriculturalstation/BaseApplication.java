@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Environment;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.igexin.sdk.PushManager;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -18,7 +19,9 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.rifeng.agriculturalstation.service.IntentService;
 import com.rifeng.agriculturalstation.service.LocationService;
+import com.rifeng.agriculturalstation.service.PushService;
 import com.rifeng.agriculturalstation.utils.LogUtil;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -48,11 +51,16 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        JPushInterface.setDebugMode(true);
-        JPushInterface.init(this);
+//        JPushInterface.setDebugMode(true);
+//        JPushInterface.init(this);
         Runtime rt = Runtime.getRuntime();
         long maxMemory = rt.maxMemory();
         LogUtil.i("maxMemory:" + Long.toString(maxMemory / (1024 * 1024)));
+
+        // com.getui.demo.DemoPushService 为第三方自定义推送服务
+        PushManager.getInstance().initialize(this.getApplicationContext(), PushService.class);
+        // com.getui.demo.DemoIntentService 为第三方自定义的推送服务事件接收类
+        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), IntentService.class);
 
         regToWx();
 
