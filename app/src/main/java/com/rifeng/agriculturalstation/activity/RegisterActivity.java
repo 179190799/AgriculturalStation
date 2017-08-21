@@ -19,6 +19,7 @@ import com.rifeng.agriculturalstation.BaseActivity;
 import com.rifeng.agriculturalstation.R;
 import com.rifeng.agriculturalstation.bean.ServerResult;
 import com.rifeng.agriculturalstation.callback.JsonCallback;
+import com.rifeng.agriculturalstation.utils.CountDownTimerUtils;
 import com.rifeng.agriculturalstation.utils.CustomProgressDialog;
 import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
@@ -64,26 +65,29 @@ public class RegisterActivity extends BaseActivity {
     TextView registerTip;
     @BindView(R.id.register_go_login)
     TextView registerGoLogin;
+    @BindView(R.id.register_get_code)
+    TextView registerGetCode;
 
     private CustomProgressDialog dialog;
-    private TextView registerGetCode;
+    //    private TextView registerGetCode;
+    private CountDownTimerUtils utils;
 
     private int i = 120;
     private int reg_type_flag = 0;
     private int user_type_flag = 0;
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == -1) {
-                registerGetCode.setText("重新发送(" + i + ")");
-            } else if (msg.what == -2) {
-                registerGetCode.setText(R.string.getVerifyCode);
-                registerGetCode.setClickable(true);
-                i = 120;
-            }
-        }
-    };
+//    private Handler mHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            if (msg.what == -1) {
+//                registerGetCode.setText("重新发送(" + i + ")");
+//            } else if (msg.what == -2) {
+//                registerGetCode.setText(R.string.getVerifyCode);
+//                registerGetCode.setClickable(true);
+//                i = 120;
+//            }
+//        }
+//    };
 
     @Override
     protected int getContentViewId() {
@@ -92,13 +96,13 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        registerGetCode = (TextView) findViewById(R.id.register_get_code);
+//        registerGetCode = (TextView) findViewById(R.id.register_get_code);
 
         dialog = new CustomProgressDialog(this, "请稍候...");
         idTitleMiddle.setText(R.string.registerBtn);
 
         // 注册按钮默认不可点击
-        registerRegisterBtn.setClickable(false);
+//        registerRegisterBtn.setClickable(false);
         registerRegisterBtn.setBackgroundResource(R.drawable.register_btn_selector);
     }
 
@@ -147,7 +151,7 @@ public class RegisterActivity extends BaseActivity {
         HttpParams params = new HttpParams();
         String url = "";
         if (strType.equals("code")) { // 获取验证码
-            params.put("phone", registerPhoneNumber.getText().toString().trim());
+            params.put("mobile", registerPhoneNumber.getText().toString().trim());
             url = Urls.URL_GET_AUTH_CODE;
         } else if (strType.equals("register")) { // 注册
             params.put("regtype", reg_type_flag + 1);
@@ -155,38 +159,38 @@ public class RegisterActivity extends BaseActivity {
             params.put("username", registerUsername.getText().toString().trim());
             params.put("password", registerPassword.getText().toString().trim());
             params.put("phone", registerPhoneNumber.getText().toString().trim());
-//        params.put("code", register_code.getText().toString().trim());
+            params.put("mobile_code", registerCode.getText().toString().trim());
 
             url = Urls.URL_USER_REGISTER;
         }
 
         // 拼接参数
         OkGo.post(url)
-            .tag(this)
-            .params(params)
-            .execute(new JsonCallback<ServerResult>() {
-                @Override
-                public void onBefore(BaseRequest request) {
-                    super.onBefore(request);
-                    dialog.show();
-                }
-
-                @Override
-                public void onSuccess(ServerResult serverResult, Call call, Response response) {
-                    ToastUtil.showShort(mContext, serverResult.msg);
-                    if (serverResult.code == 200) {
-                        dialog.dismiss();
-                        finish();
+                .tag(this)
+                .params(params)
+                .execute(new JsonCallback<ServerResult>() {
+                    @Override
+                    public void onBefore(BaseRequest request) {
+                        super.onBefore(request);
+                        dialog.show();
                     }
-                }
 
-                @Override
-                public void onError(Call call, Response response, Exception e) {
-                    super.onError(call, response, e);
-                    ToastUtil.showShort(mContext, "注册失败");
-                    dialog.dismiss();
-                }
-            });
+                    @Override
+                    public void onSuccess(ServerResult serverResult, Call call, Response response) {
+                        ToastUtil.showShort(mContext, serverResult.msg);
+                        dialog.dismiss();
+                        if (serverResult.code == 200) {
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dialog.dismiss();
+                        ToastUtil.showShort(mContext, "注册失败");
+                    }
+                });
     }
 
     private boolean checkParams() {
@@ -238,31 +242,37 @@ public class RegisterActivity extends BaseActivity {
                 break;
 
             case R.id.register_get_code: // 获取验证码
-                // TODO 访问服务器获取验证码
-//                goRegister("code");
 
-                ToastUtil.showShort(this, "验证码已发送，请稍候!");
-                registerGetCode.setClickable(false);
-                registerGetCode.setText("重新发送(" + i + ")");
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (; i > 0; i--) {
-                            // TODO 更新UI，发送消息到Handler中进行处理
-                            mHandler.sendEmptyMessage(-1);
-                            if (i < 0) {
-                                break;
-                            }
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        // TODO 更新UI，发送信息到Hanlder中进行处理
-                        mHandler.sendEmptyMessage(-2);
-                    }
-                }).start();
+                if (!TextUtils.isEmpty(registerPhoneNumber.getText().toString().trim())) {
+                    utils = new CountDownTimerUtils(registerGetCode, 60000, 1000);
+                    utils.start();
+                    sendCode();
+                } else {
+                    ToastUtil.showShort(mContext, "请输入手机号！");
+                }
+
+//                ToastUtil.showShort(this, "验证码已发送，请稍候!");
+//                registerGetCode.setClickable(false);
+//                registerGetCode.setText("重新发送(" + i + ")");
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        for (; i > 0; i--) {
+//                            // TODO 更新UI，发送消息到Handler中进行处理
+//                            mHandler.sendEmptyMessage(-1);
+//                            if (i < 0) {
+//                                break;
+//                            }
+//                            try {
+//                                Thread.sleep(1000);
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                        // TODO 更新UI，发送信息到Hanlder中进行处理
+//                        mHandler.sendEmptyMessage(-2);
+//                    }
+//                }).start();
                 break;
 
             case R.id.register_register_btn: // 注册
@@ -272,8 +282,33 @@ public class RegisterActivity extends BaseActivity {
                 break;
 
             case R.id.register_go_login: // 登录
+                if (utils != null) {
+                    utils.cancel();
+                }
                 finish();
                 break;
         }
+    }
+
+    /**
+     * 发送验证码
+     */
+    private void sendCode() {
+        OkGo.post(Urls.URL_GET_AUTH_CODE)
+                .tag(this)
+                .params("mobile",registerPhoneNumber.getText().toString().trim())
+                .execute(new JsonCallback<ServerResult>() {
+                    @Override
+                    public void onSuccess(ServerResult serverResult, Call call, Response response) {
+                        ToastUtil.showShort(mContext,serverResult.msg);
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        ToastUtil.showShort(mContext,"发送失败!");
+                    }
+                });
+
     }
 }

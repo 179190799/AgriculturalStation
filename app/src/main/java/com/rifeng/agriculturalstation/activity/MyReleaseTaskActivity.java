@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -116,9 +117,9 @@ public class MyReleaseTaskActivity extends BaseActivity {
 
 
         initialize();
-
         // 获取任务列表
         getTaskList(true);
+
     }
 
 
@@ -391,6 +392,7 @@ public class MyReleaseTaskActivity extends BaseActivity {
                 .execute(new JsonCallback<List<TaskBean>>() {
                     @Override
                     public void onSuccess(List<TaskBean> taskBeanList, Call call, Response response) {
+                        Log.e(TAG, "onSuccess: 33333333333333" );
                         if (dialog != null && dialog.isShowing()) {
                             dialog.dismiss();
                         }
@@ -444,9 +446,4 @@ public class MyReleaseTaskActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getTaskList(false);
-    }
 }

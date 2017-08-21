@@ -79,11 +79,11 @@ public class TabActivity extends FragmentActivity implements ViewPager.OnPageCha
         locationService.registerListener(mListener);
         // 开启定位
         locationService.start(); // 定位SDK
-
-        // com.getui.demo.DemoPushService 为第三方自定义推送服务
-        PushManager.getInstance().initialize(this.getApplicationContext(), PushService.class);
-        // com.getui.demo.DemoIntentService 为第三方自定义的推送服务事件接收类
-        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), IntentService.class);
+//
+//        // com.getui.demo.DemoPushService 为第三方自定义推送服务
+//        PushManager.getInstance().initialize(this.getApplicationContext(), PushService.class);
+//        // com.getui.demo.DemoIntentService 为第三方自定义的推送服务事件接收类
+//        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), IntentService.class);
 
         // register EventBus
         EventBus.getDefault().register(this);
@@ -94,6 +94,7 @@ public class TabActivity extends FragmentActivity implements ViewPager.OnPageCha
         // 关闭预加载，默认一次只加载一个Fragment
 //        mViewPager.setOffscreenPageLimit(1);
         mViewPager.setAdapter(mAdapter);
+        mViewPager.setOffscreenPageLimit(3);
         initEvent();
     }
 

@@ -88,7 +88,7 @@
     <string name="locomotiveNature">工作性质</string>
     <string name="locomotiveOperateTime">运营时间</string>
     <string name="locomotiveStatus">目前状态</string>
-    <string name="district">区域：</string>
+    <string name="district">区域:</string>
 
     <!--登录-->
     <string name="loginUserNameTips">用户名/手机号</string>

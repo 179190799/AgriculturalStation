@@ -4,10 +4,17 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.lzy.okgo.OkGo;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.rifeng.agriculturalstation.BaseFragment;
@@ -24,6 +31,7 @@ import com.rifeng.agriculturalstation.activity.PersonalInfoActivity;
 import com.rifeng.agriculturalstation.activity.PunishmentActivity;
 import com.rifeng.agriculturalstation.bean.ServerResult;
 import com.rifeng.agriculturalstation.callback.JsonCallback;
+import com.rifeng.agriculturalstation.utils.AsyncHttpUtil;
 import com.rifeng.agriculturalstation.utils.Consts;
 import com.rifeng.agriculturalstation.utils.CustomProgressDialog;
 import com.rifeng.agriculturalstation.utils.LogUtil;
@@ -31,6 +39,10 @@ import com.rifeng.agriculturalstation.utils.SharedPreferencesUtil;
 import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
 import com.rifeng.agriculturalstation.view.CircleImageView;
+
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -80,6 +92,8 @@ public class MineFragment extends BaseFragment {
     TextView mineSafeExit;
     @BindView(R.id.safe_exit_view)
     View safeExitView;
+    @BindView(R.id.ll_account_starts)
+    LinearLayout starts;
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private CustomProgressDialog dialog;
@@ -94,7 +108,7 @@ public class MineFragment extends BaseFragment {
     @Override
     protected void initData() {
         dialog = new CustomProgressDialog(getActivity(), "请稍候...");
-
+        obtainData();
         Drawable drawableLeft = getActivity().getResources().getDrawable(R.mipmap.common_title_right);
         // 必须设置图片大小，否则不显示
         drawableLeft.setBounds(0, 0, drawableLeft.getMinimumWidth(), drawableLeft.getMinimumHeight());
@@ -111,6 +125,70 @@ public class MineFragment extends BaseFragment {
         }
         // 判断用户是否有登录
         isLogin();
+    }
+
+    private void obtainData() {
+        RequestParams params = new RequestParams();
+        params.put("uid", SharedPreferencesUtil.get(getActivity(), Consts.USER_UID, 0));
+        AsyncHttpUtil.post(Urls.URL_ACCOUNT_INFO, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+//                    int integral = response.getInt("integral");
+
+                    if (!getActivity().isFinishing()) {
+//                        accountBalanceTv.setText("￥" + tempBalance);
+//                        accountIntegralTv.setText(integral + "");
+                        setLevel(response.getInt("accountlevel"));
+
+//                        Log.e(TAG, "tempBalance: " + "￥" + tempBalance);
+//                        Log.e(TAG, "integral: " + integral + "");
+//                        Log.e(TAG, "accountlevel: " + response.getInt("accountlevel"));
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+
+            }
+        });
+    }
+
+    /**
+     * 设置我的星级
+     *
+     * @param accountlevel
+     */
+    private void setLevel(int accountlevel) {
+        if (accountlevel == 0) {
+            ImageView imageView = new ImageView(getActivity());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    new ViewGroup.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            params.leftMargin = 5;
+            params.topMargin = 6;
+            params.gravity = Gravity.CENTER ;
+            imageView.setBackgroundResource(R.mipmap.ic_stars);
+            starts.addView(imageView, params);
+        } else {
+
+            // 星级数
+            for (int i = 0; i < accountlevel; i++) {
+                ImageView imageView = new ImageView(getActivity());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        new ViewGroup.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                params.leftMargin = 5;
+                params.topMargin = 6;
+                params.gravity = Gravity.CENTER ;
+                imageView.setBackgroundResource(R.mipmap.ic_stars);
+                starts.addView(imageView, params);
+            }
+        }
     }
 
     private void isLogin() {
@@ -169,7 +247,7 @@ public class MineFragment extends BaseFragment {
     protected void lazyLoad() {
         if (!isVisible) {
             return;
-        }else {
+        } else {
 
             LogUtil.i("TAG", "MineFragment --- UI布局可见");
         }
@@ -235,7 +313,7 @@ public class MineFragment extends BaseFragment {
                 SharedPreferencesUtil.remove(getActivity(), Consts.USER_PHONE);
                 SharedPreferencesUtil.remove(getActivity(), Consts.USER_USERNAME);
                 startActivity(new Intent(getActivity(), LoginActivity.class));
-                ToastUtil.showLong(getContext(),"您已安全退出");
+                ToastUtil.showLong(getContext(), "您已安全退出");
 
         }
     }
@@ -244,26 +322,26 @@ public class MineFragment extends BaseFragment {
         dialog.show();
         // 拼接参数
         OkGo.post(Urls.URL_SIGN_IN)
-            .tag(this)
-            .params("uid", (int) SharedPreferencesUtil.get(getActivity(), Consts.USER_UID, 0))
-            .params("username", (String) SharedPreferencesUtil.get(getActivity(), Consts.USER_USERNAME, ""))
-            .execute(new JsonCallback<ServerResult>() {
-                @Override
-                public void onSuccess(ServerResult serverResult, Call call, Response response) {
-                    if(dialog != null && dialog.isShowing()){
-                        dialog.dismiss();
+                .tag(this)
+                .params("uid", (int) SharedPreferencesUtil.get(getActivity(), Consts.USER_UID, 0))
+                .params("username", (String) SharedPreferencesUtil.get(getActivity(), Consts.USER_USERNAME, ""))
+                .execute(new JsonCallback<ServerResult>() {
+                    @Override
+                    public void onSuccess(ServerResult serverResult, Call call, Response response) {
+                        if (dialog != null && dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        ToastUtil.showShort(getActivity(), serverResult.msg);
                     }
-                    ToastUtil.showShort(getActivity(), serverResult.msg);
-                }
 
-                @Override
-                public void onError(Call call, Response response, Exception e) {
-                    super.onError(call, response, e);
-                    ToastUtil.showShort(getActivity(), "网络错误");
-                    if(dialog != null && dialog.isShowing()){
-                        dialog.dismiss();
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        ToastUtil.showShort(getActivity(), "网络错误");
+                        if (dialog != null && dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
                     }
-                }
-            });
+                });
     }
 }

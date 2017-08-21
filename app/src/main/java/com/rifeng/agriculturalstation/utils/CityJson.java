@@ -65,7 +65,7 @@ public class CityJson {
             mProvinceDatas = new String[jsonArray.length()];
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonP = jsonArray.getJSONObject(i);// 每个省的json对象
-                String province = jsonP.getString("p");// 省名字
+                String province = jsonP.getString("p").trim();// 省名字
                 mProvinceDatas[i] = province;
                 JSONArray jsonCs = null;
                 try {
@@ -80,7 +80,7 @@ public class CityJson {
                 String[] mCitiesDatas = new String[jsonCs.length()];
                 for (int j = 0; j < jsonCs.length(); j++) {
                     JSONObject jsonCity = jsonCs.getJSONObject(j);
-                    String city = jsonCity.getString("n");// 市名字
+                    String city = jsonCity.getString("n").trim();// 市名字
                     mCitiesDatas[j] = city;
                     JSONArray jsonAreas = null;
                     try {

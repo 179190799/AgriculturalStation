@@ -22,40 +22,47 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/district" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:padding="5dp"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/district" />-->
 
         <Spinner
             android:id="@+id/province_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></Spinner>
+            android:gravity="center"
+            android:layout_height="wrap_content" />
 
         <Spinner
             android:id="@+id/city_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></Spinner>
+            android:gravity="center"
+            android:layout_height="wrap_content" />
 
         <TextView
+            android:maxLines="1"
             android:id="@+id/taskfrag_time"
-            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:drawableRight="@mipmap/up_arrow"
-            android:drawablePadding="5dp"
             android:text="@string/taskCenterTime" />
 
         <TextView
             android:id="@+id/taskfrag_price"
-            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:gravity="center_vertical"
-            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:maxLines="1"
             android:drawableRight="@mipmap/up_arrow"
-            android:text="@string/taskCenterProjectPrice" />
+            android:text="@string/taskCenterProjectPrice"
+            android:layout_marginRight="5dp" />
     </LinearLayout>
 
     <View

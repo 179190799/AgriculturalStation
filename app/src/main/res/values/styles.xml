@@ -27,7 +27,6 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-
     <style name="SwipeBackLayout">
         <item name="EdgeSize">20dip</item>
         <item name="ShadowLeft">@mipmap/shadow_left</item>

@@ -1,6 +1,7 @@
 package com.rifeng.agriculturalstation.activity;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,6 +80,7 @@ public class LoginActivity extends BaseActivity {
                     if (serverResult.code == 200) {
                         // 存储用户uid
                         SharedPreferencesUtil.put(LoginActivity.this, Consts.USER_UID, serverResult.data.uid);
+                        Log.e(TAG, "onSuccess: USER_UID"+  serverResult.data.uid);
                         // 存储用户名
                         SharedPreferencesUtil.put(LoginActivity.this, Consts.USER_USERNAME, serverResult.data.username);
                         // 存储手机号

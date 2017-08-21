@@ -157,11 +157,10 @@ public class PayProjectBond extends BaseActivity {
                 .execute(new JsonCallback<ServerResult>() {
                     @Override
                     public void onSuccess(ServerResult serverResult, Call call, Response response) {
-                        ToastUtil.showShort(mContext, "支付成功");
+                        ToastUtil.showShort(mContext, serverResult.msg);
                         if (serverResult.code == 200) {
                             ToastUtil.showShort(mContext, serverResult.msg);
                             finish();
-
                         }
                     }
 

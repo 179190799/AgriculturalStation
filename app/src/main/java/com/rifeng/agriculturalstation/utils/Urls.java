@@ -37,7 +37,7 @@ public class Urls {
     public static final String URL_GET_EVALUATION = SERVER + "app-task-op-getevaluation.html"; // 获取评价的内容
     public static final String URL_POST_EVALUATION = SERVER + "app-task-op-evaluation.html";// 提交评价内容
     // 忘记密码
-    public static final String URL_GET_AUTH_CODE = SERVER + "app-register-op-code.html"; // 获取验证码
+    public static final String URL_GET_AUTH_CODE = SERVER + "app-mynews-op-sms.html"; // 获取验证码
     public static final String URL_FIND_PASSWORD = SERVER + "app-register-op-change.html";// 找回密码
     // 帖子详情
     public static final String URL_FORUM_COMMENTS = SERVER + "app-forum-op-comments.html"; // 获取评论数据
