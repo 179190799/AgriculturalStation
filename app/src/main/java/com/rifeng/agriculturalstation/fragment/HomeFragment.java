@@ -119,7 +119,7 @@ public class HomeFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // register
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
 
@@ -132,17 +132,17 @@ public class HomeFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-    /**
-     * 接收到事件后更新详情
-     *
-     * @param str
-     */
-    @Subscribe
-    public void onEventMainThread(String str) {
-        if (str != null) {
-            homeCurrentLocation.setText("您当前的位置：" + str);
-        }
-    }
+//    /**
+//     * 接收到事件后更新详情
+//     *
+//     * @param str
+//     */
+//    @Subscribe
+//    public void onEventMainThread(String str) {
+//        if (str != null) {
+//            homeCurrentLocation.setText("您当前的位置：" + str);
+//        }
+//    }
 
     @Override
     protected int getLayoutId() {

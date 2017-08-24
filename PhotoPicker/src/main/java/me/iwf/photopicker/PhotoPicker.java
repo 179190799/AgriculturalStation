@@ -118,5 +118,7 @@ public class PhotoPicker {
       mPickerOptionsBundle.putBoolean(EXTRA_PREVIEW_ENABLED, previewEnabled);
       return this;
     }
+
+
   }
 }

@@ -16,8 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
             android:layout_marginTop="20dp"
-            android:focusableInTouchMode="true"
             android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <LinearLayout
@@ -39,9 +39,9 @@
                     android:id="@+id/rt_task_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:background="@drawable/input_shape"
+                    android:gravity="center_vertical"
                     android:padding="5dp"
                     android:singleLine="true" />
             </LinearLayout>
@@ -92,9 +92,9 @@
                     android:id="@+id/rt_work_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:background="@drawable/input_shape"
+                    android:gravity="center_vertical"
                     android:padding="5dp"
                     android:singleLine="true" />
             </LinearLayout>
@@ -117,10 +117,10 @@
                     android:id="@+id/rt_schedule_et"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/rt_schedule_tv"
                     android:background="@drawable/input_shape"
+                    android:gravity="center_vertical"
                     android:padding="5dp"
                     android:singleLine="true" />
 
@@ -153,8 +153,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/rt_bidding_tv"
-                    android:gravity="center_vertical"
                     android:background="@drawable/input_shape"
+                    android:gravity="center_vertical"
                     android:padding="5dp"
                     android:singleLine="true" />
 
@@ -186,10 +186,10 @@
                     android:id="@+id/rt_totalprice_et"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/rt_totalprice_tv"
                     android:background="@drawable/input_shape"
+                    android:gravity="center_vertical"
                     android:padding="5dp"
                     android:singleLine="true" />
 
@@ -224,8 +224,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:background="@drawable/input_shape"
-                    android:paddingBottom="7dp"
                     android:gravity="center_vertical"
+                    android:paddingBottom="7dp"
                     android:paddingLeft="5dp"
                     android:paddingTop="7dp"
                     android:singleLine="true"
@@ -256,8 +256,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:background="@drawable/input_shape"
-                    android:paddingBottom="7dp"
                     android:gravity="center_vertical"
+                    android:paddingBottom="7dp"
                     android:paddingLeft="5dp"
                     android:paddingTop="7dp"
                     android:singleLine="true"
@@ -286,9 +286,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:paddingBottom="7dp"
-                    android:gravity="center_vertical"
                     android:background="@drawable/input_shape"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="7dp"
                     android:paddingLeft="5dp"
                     android:paddingTop="7dp"
                     android:singleLine="true"
@@ -343,29 +343,68 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="50dp"></Spinner>
+                    android:layout_marginRight="50dp" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="20dp"
-                android:text="@string/releaseTaskPictures"
-                android:textSize="16sp" />
-
-            <me.iwf.photopicker.widget.MultiPickResultView
-                android:id="@+id/recycler_view"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/rx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/releaseTaskPictures"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/rt_add_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_toRightOf="@+id/rx"
+                    android:drawableLeft="@mipmap/img_add" />
+            </RelativeLayout>
+
+
+            <!--<me.iwf.photopicker.widget.MultiPickResultView-->
+            <!--android:id="@+id/recycler_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+            <!--<ImageView-->
+            <!--android:id="@+id/img"-->
+            <!--android:layout_width="120dp"-->
+            <!--android:layout_height="120dp"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--android:layout_marginLeft="30dp"-->
+            <!--android:layout_marginStart="30dp"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:src="@mipmap/no_picture" />-->
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rt_img_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp" />
+
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginTop="50dp"
-                android:layout_marginBottom="50dp"
                 android:layout_gravity="bottom"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="50dp"
+                android:gravity="center"
                 android:text="@string/releaseTaskTips"
                 android:textColor="@android:color/holo_red_light" />
         </LinearLayout>

@@ -65,11 +65,11 @@ dependencies {
     compile files('libs/org.apache.http.legacy.jar')
     compile 'com.android.support:recyclerview-v7:23.4.0'
     compile 'com.commit451:PhotoView:1.2.4'
+    compile project(':okgo')
     compile project(':PhotoPicker')
     compile 'com.squareup.okhttp3:okhttp:3.4.2'
     compile files('libs/BaiduLBS_Android.jar')
     compile 'org.greenrobot:eventbus:3.0.0'
-    compile project(':okgo')
     // ButterKnife
     compile 'com.jakewharton:butterknife:8.2.1'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
@@ -87,5 +87,6 @@ dependencies {
     compile files('libs/alipaySdk-20170309.jar')
     compile 'com.getui:sdk:2.10.2.0'
     compile 'com.android.support:support-v4:+'
+    compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
 
 }

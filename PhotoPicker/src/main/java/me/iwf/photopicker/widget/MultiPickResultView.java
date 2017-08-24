@@ -97,11 +97,8 @@ public class MultiPickResultView extends FrameLayout {
         photoAdapter = new PhotoAdapter(context, selectedPhotos);
         photoAdapter.setAction(action);
         recyclerView.setAdapter(photoAdapter);
-        //recyclerView.setLayoutFrozen(true);
-
-
+//        recyclerView.setLayoutFrozen(true);
     }
-
 
     public void showPics(List<String> paths){
         if (paths != null){
@@ -111,13 +108,6 @@ public class MultiPickResultView extends FrameLayout {
         }
 
     }
-
-
-
-
-
-
-
 
     public  void onActivityResult(int requestCode, int resultCode, Intent data){
         if (action == ACTION_SELECT){

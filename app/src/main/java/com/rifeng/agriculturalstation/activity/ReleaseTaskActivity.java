@@ -1,12 +1,22 @@
 package com.rifeng.agriculturalstation.activity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,14 +24,20 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.loopj.android.http.Base64;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.request.BaseRequest;
+import com.nostra13.universalimageloader.utils.L;
 import com.rifeng.agriculturalstation.BaseActivity;
+import com.rifeng.agriculturalstation.MainActivity;
 import com.rifeng.agriculturalstation.R;
+import com.rifeng.agriculturalstation.adapter.ReleaseTaskAdapter;
 import com.rifeng.agriculturalstation.bean.ServerReleaseTaskBean;
 import com.rifeng.agriculturalstation.callback.JsonCallback;
 import com.rifeng.agriculturalstation.utils.ChangeAddressPopwindow;
@@ -32,9 +48,12 @@ import com.rifeng.agriculturalstation.utils.ImageUtils;
 import com.rifeng.agriculturalstation.utils.SharedPreferencesUtil;
 import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
+import com.rifeng.agriculturalstation.view.PhotoViewPager;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -42,7 +61,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
+import me.iwf.photopicker.PhotoPagerActivity;
+import me.iwf.photopicker.PhotoPicker;
+import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.widget.MultiPickResultView;
+import me.nereo.multi_image_selector.MultiImageSelector;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -79,10 +103,12 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
     EditText rtAddress; // 具体位置
     @BindView(R.id.release_spinner)
     Spinner mSpinner;
-    @BindView(R.id.recycler_view)
-    MultiPickResultView recyclerView;
+    //    @BindView(R.id.recycler_view)
+//    MultiPickResultView recyclerView;
     @BindView(R.id.rt_end_time_et)
     TextView rtEndTime;//竞标截止日期
+    @BindView(R.id.rt_img_list)
+    RecyclerView imgLists;
 
     private String defaultProvince = "广西"; // 省份，默认值
     private String defaultCity = "南宁"; // 城市，默认值
@@ -93,8 +119,11 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
     private int needstar; // 可接用户
     private int startactivity = 2; //表示本页面启动的支付保证金页面
     private CustomProgressDialog dialog;
-    private List<String> selectImgs;
+    private List<String> selectImgs = new ArrayList<>();
     private List<File> fileList = new ArrayList<>();
+    public final static int ALBUM_REQUEST_CODE = 1;
+
+    private ReleaseTaskAdapter mAdapter;
 
     @Override
     protected int getContentViewId() {
@@ -118,7 +147,7 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // 绑定Adapter到控件
         mSpinner.setAdapter(spinnerAdapter);
-        recyclerView.init(this, MultiPickResultView.ACTION_SELECT, null);
+//        recyclerView.init(this, MultiPickResultView.ACTION_SELECT, null);
         initDate();
     }
 
@@ -199,40 +228,41 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
      * 发布任务
      */
     private void farmUpload() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (selectImgs != null && selectImgs.size() > 0) {
-                    if (fileList != null) {
-                        fileList.clear();
-                    }
-                    try {
-                        for (int i = 0; i < selectImgs.size(); i++) {
-                            fileList.add(ImageUtils.bitmap2File(selectImgs.get(i), 480, 800, ReleaseTaskActivity.this));
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (selectImgs != null && selectImgs.size() > 0) {
+//                    if (fileList != null) {
+//                        fileList.clear();
+//                    }
+//                    try {
+//                        for (int i = 0; i < selectImgs.size(); i++) {
+//                            fileList.add(ImageUtils.bitmap2File(selectImgs.get(i), 480, 800, ReleaseTaskActivity.this));
+//                        }
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
+//        thread.start();
+//        try {
+//            thread.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         HttpParams params = new HttpParams();
-        for (int i = 0; i < fileList.size(); i++) {
-            params.put("uploadfile" + i, fileList.get(i));
+        for (int i = 0; i < selectImgs.size(); i++) {
+            params.put("uploadfile" + i, selectImgs.get(i));
         }
-        params.put("count", fileList.size());
+//        params.put("count", selectImgs.size());
 
         // 拼接参数
         OkGo.post(Urls.URL_RELEASE_TASK)
                 .tag(this)
                 .params(params)
+                .params("count", selectImgs.size())
                 .params("uid", (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0), true)
                 .params("name", rtTaskName.getText().toString().trim())
                 .params("content", rtTaskDescribe.getText().toString().trim())
@@ -257,14 +287,14 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
                     public void onSuccess(ServerReleaseTaskBean serverReleaseTaskBean, Call call, Response response) {
                         if (serverReleaseTaskBean.getCode() == 200) {
                             ToastUtil.showShort(mContext, serverReleaseTaskBean.msg);
-
                             int taskid = serverReleaseTaskBean.getTaskid();//发布的项目id
                             double taskmoney = serverReleaseTaskBean.getTaskmoney();//发布项目需要付的项目保证金
                             Bundle bundle = new Bundle();
                             bundle.putDouble("taskmoney", taskmoney);
                             bundle.putInt("taskid", taskid);
-                            bundle.putInt("startactivity",startactivity);
+                            bundle.putInt("startactivity", startactivity);
                             startActivity(PayProjectBond.class, bundle);
+                            finish();
                             dialog.dismiss();
                         }
 
@@ -279,15 +309,6 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
                 });
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        recyclerView.onActivityResult(requestCode, resultCode, data);
-
-        selectImgs = recyclerView.getPhotos();
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -299,11 +320,25 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
         }
     }
 
-    @OnClick({R.id.id_title_left, R.id.id_title_right, R.id.rt_task_describe, R.id.rt_worktime_et, R.id.rt_place_tv, R.id.rt_address, R.id.rt_end_time_et})
+    @OnClick({R.id.rt_add_image, R.id.id_title_left, R.id.id_title_right, R.id.rt_task_describe, R.id.rt_worktime_et, R.id.rt_place_tv, R.id.rt_address, R.id.rt_end_time_et})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.id_title_left: // 返回
                 finish();
+                break;
+            case R.id.rt_add_image: //
+//                MultiImageSelector.create(Context)
+//                        .showCamera(true) // 是否显示相机. 默认为显示
+//        .count(9) // 最大选择图片数量, 默认为9. 只有在选择模式为多选时有效
+//        .single() // 单选模式
+//                    .multi() // 多选模式, 默认模式;
+//                    .origin(ArrayList < String >) // 默认已选择图片. 只有在选择模式为多选时有效
+//                    .start(Activity / Fragment, REQUEST_IMAGE);
+                MultiImageSelector.create()
+                        .count(3)
+                        .multi()
+                        .showCamera(true)
+                        .start(this, ALBUM_REQUEST_CODE);
                 break;
 
             case R.id.id_title_right: // 发布
@@ -345,5 +380,111 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
                 break;
 
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ALBUM_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // 获取返回的图片列表
+                final ArrayList<String> stringArrayListExtra = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                Log.e("TAG", "stringArrayListExtra: " + stringArrayListExtra);
+                mAdapter = new ReleaseTaskAdapter(mContext, stringArrayListExtra);
+                imgLists.setLayoutManager(new GridLayoutManager(mContext, 3));
+                imgLists.setAdapter(mAdapter);
+
+                /**
+                 * 根据图片路径 压缩图片，压缩成file文件
+                 */
+                if (stringArrayListExtra.size() != 0) {
+                    for (int i = 0; i < stringArrayListExtra.size(); i++) {
+                        try {
+                            fileList.add(ImageUtils.bitmap2File(stringArrayListExtra.get(i), 480, 800, mContext));
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                Log.e("TAG", "fileList: " + fileList);
+
+                /**
+                 * 把file文件转化为base64数组
+                 */
+                for (int i = 0; i < fileList.size(); i++) {
+                    selectImgs.add(imageToBase64(fileList.get(i).getPath()));
+                }
+                Log.e("TAG", "selectImgs: " + selectImgs);
+            }
+        }
+    }
+
+//    /**
+//     * 获取绝对路径
+//     *
+//     * @param context
+//     * @param uri
+//     * @return
+//     */
+//    public String getAbsolutePath(final Context context, final Uri uri) {
+//        if (null == uri) return null;
+//        final String scheme = uri.getScheme();
+//        String data = null;
+//        if (scheme == null)
+//            data = uri.getPath();
+//        else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+//            data = uri.getPath();
+//        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+//            Cursor cursor = context.getContentResolver().query(uri,
+//                    new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
+//            if (null != cursor) {
+//                if (cursor.moveToFirst()) {
+//                    int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+//                    if (index > -1) {
+//                        data = cursor.getString(index);
+//                    }
+//                }
+//                cursor.close();
+//            }
+//        }
+//        return data;
+//    }
+//
+
+    /**
+     * 将图片转换成Base64编码的字符串
+     *
+     * @param path
+     * @return base64编码的字符串
+     */
+    public static String imageToBase64(String path) {
+        if (TextUtils.isEmpty(path)) {
+            return null;
+        }
+        InputStream is = null;
+        byte[] data = null;
+        String result = null;
+        try {
+            is = new FileInputStream(path);
+            //创建一个字符流大小的数组。
+            data = new byte[is.available()];
+            //写入数组
+            is.read(data);
+            //用默认的编码格式进行编码
+            result = Base64.encodeToString(data, Base64.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != is) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        return result;
     }
 }

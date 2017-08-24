@@ -22,7 +22,7 @@
             <com.youth.banner.Banner
                 android:id="@+id/banner"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"></com.youth.banner.Banner>
+                android:layout_height="200dp" />
 
             <TextView
                 android:id="@+id/alltask_details_title"

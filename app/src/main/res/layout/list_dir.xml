@@ -9,6 +9,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:divider="#EEE3D9"
-        android:dividerHeight="1px"></ListView>
+        android:dividerHeight="1px" />
 
 </RelativeLayout>
