@@ -40,7 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * Log打印标签
      */
-    protected String TAG = this.getClass().getSimpleName();
+    protected String TAG = "TAG";
     /**
      * 全局的Context
      */

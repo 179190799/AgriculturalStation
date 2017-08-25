@@ -326,7 +326,7 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
             case R.id.id_title_left: // 返回
                 finish();
                 break;
-            case R.id.rt_add_image: //
+            case R.id.rt_add_image: //添加图片
 //                MultiImageSelector.create(Context)
 //                        .showCamera(true) // 是否显示相机. 默认为显示
 //        .count(9) // 最大选择图片数量, 默认为9. 只有在选择模式为多选时有效
@@ -334,6 +334,9 @@ public class ReleaseTaskActivity extends BaseActivity implements View.OnTouchLis
 //                    .multi() // 多选模式, 默认模式;
 //                    .origin(ArrayList < String >) // 默认已选择图片. 只有在选择模式为多选时有效
 //                    .start(Activity / Fragment, REQUEST_IMAGE);
+                if (!selectImgs.equals("")&&selectImgs.size()!=0) {
+                    selectImgs.clear();
+                }
                 MultiImageSelector.create()
                         .count(3)
                         .multi()

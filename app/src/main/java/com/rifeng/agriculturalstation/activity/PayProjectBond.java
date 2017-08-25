@@ -13,6 +13,7 @@ import com.loopj.android.http.RequestParams;
 import com.lzy.okgo.OkGo;
 import com.rifeng.agriculturalstation.BaseActivity;
 import com.rifeng.agriculturalstation.R;
+import com.rifeng.agriculturalstation.bean.EeventBusBean;
 import com.rifeng.agriculturalstation.bean.ServerResult;
 import com.rifeng.agriculturalstation.callback.JsonCallback;
 import com.rifeng.agriculturalstation.utils.ActivityCollector;
@@ -24,6 +25,7 @@ import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
 
 import org.apache.http.Header;
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -96,9 +98,10 @@ public class PayProjectBond extends BaseActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-
-                    balancemoney = response.getDouble("balance");
-                    pay_balance_tv.setText(balancemoney + "");
+                    if (!isFinishing()) {
+                        balancemoney = response.getDouble("balance");
+                        pay_balance_tv.setText(balancemoney + "");
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -159,6 +162,7 @@ public class PayProjectBond extends BaseActivity {
                     public void onSuccess(ServerResult serverResult, Call call, Response response) {
                         ToastUtil.showShort(mContext, serverResult.msg);
                         if (serverResult.code == 200) {
+//                            EventBus.getDefault().post(new EeventBusBean("ok"));
                             ToastUtil.showShort(mContext, serverResult.msg);
                             finish();
                         }

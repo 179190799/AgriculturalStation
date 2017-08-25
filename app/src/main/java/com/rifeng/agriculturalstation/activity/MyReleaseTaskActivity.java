@@ -9,12 +9,14 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ import com.lzy.okgo.OkGo;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.rifeng.agriculturalstation.BaseActivity;
 import com.rifeng.agriculturalstation.R;
+import com.rifeng.agriculturalstation.bean.EeventBusBean;
 import com.rifeng.agriculturalstation.bean.ServerResult;
 import com.rifeng.agriculturalstation.bean.TaskBean;
 import com.rifeng.agriculturalstation.callback.JsonCallback;
@@ -38,6 +41,8 @@ import com.rifeng.agriculturalstation.utils.SharedPreferencesUtil;
 import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
 
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +82,8 @@ public class MyReleaseTaskActivity extends BaseActivity {
     private int start = 0;
     private int perpage = 12;
     private int isLoading = 0;
+
+    private boolean isFirst = true;
 
 
     @Override
@@ -119,7 +126,6 @@ public class MyReleaseTaskActivity extends BaseActivity {
         initialize();
         // 获取任务列表
         getTaskList(true);
-
     }
 
 
@@ -259,8 +265,7 @@ public class MyReleaseTaskActivity extends BaseActivity {
                 Intent intent = new Intent(MyReleaseTaskActivity.this, TaskCenterDetailsActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
-
-                mAdapter.notifyItemRemoved(position);
+                mAdapter.notifyItemRemoved(holder.getAdapterPosition());
             }
 
             @Override
@@ -420,9 +425,17 @@ public class MyReleaseTaskActivity extends BaseActivity {
                 });
     }
 
+//    @Override
+//    protected void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        EventBus.getDefault().register(this);
+//    }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+//        EventBus.getDefault().unregister(this);
         if (dialog != null) {
             if (dialog.isShowing()) {
                 dialog.cancel();
@@ -446,4 +459,44 @@ public class MyReleaseTaskActivity extends BaseActivity {
         }
     }
 
+
+//    public void onEventAsync(EeventBusBean event){
+//
+//        String msg = event.getMsg();
+//        if (msg.equals("ok")) {
+//            Log.e("TAG", "onEventAsync: "+msg );
+//        }
+//    }
+
+//
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        if (isFirst) {
+//            Log.e("TAG", "onStart:1 ");
+//            isFirst = false;
+//        } else {
+//            Log.e("TAG", "onStart:2 ");
+//        }
+//    }
+//
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        Log.e("TAG", "onRestart:");
+//    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isFirst) {
+            isFirst = false;
+        } else {
+            if (taskList.size()!=0) {
+                taskList.clear();
+            }
+            start = 0;
+            getTaskList(true);
+        }
+    }
 }

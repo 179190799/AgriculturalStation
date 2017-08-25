@@ -166,7 +166,7 @@ public class GrabFragment extends BaseFragment {
         }else {
             LogUtil.i("TAG", "GrabFragment --- UI布局可见");
             // 从服务器获取数据
-            getTaskList(false, "");
+            getTaskList(true, "");
         }
     }
 

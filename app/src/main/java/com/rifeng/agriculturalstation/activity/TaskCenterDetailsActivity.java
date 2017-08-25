@@ -341,6 +341,7 @@ public class TaskCenterDetailsActivity extends BaseActivity {
                         bundle.putInt("taskid", taskid);
                         bundle.putInt("startactivity", startactivity);
                         startActivity(PayProjectBond.class, bundle);
+                        finish();
                     } else {
                         ToastUtil.showShort(mContext, "该任务不是您发布的！");
                     }

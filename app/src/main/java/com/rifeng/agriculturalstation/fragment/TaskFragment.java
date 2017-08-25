@@ -170,7 +170,7 @@ public class TaskFragment extends BaseFragment {
             LogUtil.i("TAG", "TaskFragment --- UI布局可见");
 
             // 从服务器获取数据
-            getTaskList(false, "");
+            getTaskList(true, "");
         }
     }
 
