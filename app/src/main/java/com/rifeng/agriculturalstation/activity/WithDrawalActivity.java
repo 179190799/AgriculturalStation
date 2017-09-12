@@ -10,9 +10,12 @@ import android.widget.TextView;
 import com.lzy.okgo.OkGo;
 import com.rifeng.agriculturalstation.BaseActivity;
 import com.rifeng.agriculturalstation.R;
+import com.rifeng.agriculturalstation.bean.CodeBean;
+import com.rifeng.agriculturalstation.bean.ServerModel;
 import com.rifeng.agriculturalstation.bean.ServerResult;
 import com.rifeng.agriculturalstation.callback.JsonCallback;
 import com.rifeng.agriculturalstation.utils.Consts;
+import com.rifeng.agriculturalstation.utils.CustomProgressDialog;
 import com.rifeng.agriculturalstation.utils.SharedPreferencesUtil;
 import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
@@ -35,16 +38,20 @@ public class WithDrawalActivity extends BaseActivity {
     TextView idTitleMiddle;
     @BindView(R.id.withdrawal_balance)
     TextView balance; // 可用余额
-    @BindView(R.id.withdrawal_price_tv)
-    TextView withdrawalPriceTv;
-    @BindView(R.id.withdrawal_price_et)
-    EditText withdrawal_price; // 提现金额
-    @BindView(R.id.withdrawal_price_unit)
-    TextView withdrawalPriceUnit;
+    @BindView(R.id.withdrawal_money)
+    EditText withdrawalPrice; // 提现金额
     @BindView(R.id.withdrawal_bank_card)
-    TextView bank_card; // 银行卡
+    EditText withdrawalBankCard;//提现银行卡所属银行
+    @BindView(R.id.withdrawal_account)
+    EditText withdrawalAccount;//提现银行卡账号
+    @BindView(R.id.withdrawal_userName)
+    EditText withdrawalUserName;//提现的银行卡所有者姓名
     @BindView(R.id.withdrawal_finish)
     Button okButton;
+
+    private CustomProgressDialog mDialog;
+
+
 
     @Override
     protected int getContentViewId() {
@@ -53,37 +60,59 @@ public class WithDrawalActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        mDialog = new CustomProgressDialog(mContext, "正在加载中...");
         idTitleMiddle.setText("提现");
         balance.setText(Html.fromHtml("可提现金额：<font color='#FF9F3F'>" +
                 this.getIntent().getExtras().getString("balance") + "</font> 元"));
     }
 
-    private void submit() {
+    private void submit(boolean isShow) {
+        if (isShow) {
+            mDialog.show();
+        }
         // 拼接参数
-        // TODO 地址还没有
-        OkGo.post(Urls.URL_UPLOAD_CERTIFICATE)
-            .tag(this)
-            .params("uid", (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0), true)
-            .params("price", withdrawal_price.getText().toString().trim())
-            .execute(new JsonCallback<ServerResult>() {
-                @Override
-                public void onSuccess(ServerResult serverResult, Call call, Response response) {
-                    ToastUtil.showShort(mContext, serverResult.msg);
-                    if (serverResult.code == 200) {
+        OkGo.post(Urls.URL_WITH_DRAWAL)
+                .tag(this)
+                .params("uid", (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0), true)
+                .params("money", withdrawalPrice.getText().toString().trim())
+                .params("bankname", withdrawalBankCard.getText().toString().trim())
+                .params("linkname",withdrawalUserName.getText().toString().trim())
+                .params("payusername",withdrawalAccount.getText().toString().trim())
+                .execute(new JsonCallback<CodeBean>() {
+                    @Override
+                    public void onSuccess(CodeBean codeBean, Call call, Response response) {
+                        mDialog.dismiss();
+                        ToastUtil.showShort(mContext, codeBean.getMsg());
+                        if (codeBean.getCode()!=-1) {
+                            finish();
+                        }
                     }
-                }
 
-                @Override
-                public void onError(Call call, Response response, Exception e) {
-                    super.onError(call, response, e);
-                    ToastUtil.showShort(mContext, "提现失败");
-                }
-            });
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        mDialog.dismiss();
+                        ToastUtil.showShort(mContext, "提现失败");
+                    }
+                });
     }
 
     private boolean checkParams() {
-        if (TextUtils.isEmpty(withdrawal_price.getText().toString().trim())) {
+
+        if (TextUtils.isEmpty( withdrawalPrice.getText().toString().trim())) {
             ToastUtil.showShort(mContext, "请输入提现金额");
+            return false;
+        }
+        if (TextUtils.isEmpty( withdrawalBankCard.getText().toString().trim())) {
+            ToastUtil.showShort(mContext, "请输入所属银行");
+            return false;
+        }
+        if (TextUtils.isEmpty( withdrawalUserName.getText().toString().trim())) {
+            ToastUtil.showShort(mContext, "请输入用户姓名");
+            return false;
+        }
+        if (TextUtils.isEmpty( withdrawalAccount.getText().toString().trim())) {
+            ToastUtil.showShort(mContext, "请输入银行卡号（支付宝账号）");
             return false;
         }
         return true;
@@ -96,12 +125,13 @@ public class WithDrawalActivity extends BaseActivity {
                 finish();
                 break;
 
-            case R.id.withdrawal_bank_card: // 银行卡
-                break;
+//            case R.id.withdrawal_bank_card: // 银行卡
+//
+//                break;
 
             case R.id.withdrawal_finish: // 完成
                 if (checkParams()) {
-                    submit();
+                    submit(true);
                 }
                 break;
         }

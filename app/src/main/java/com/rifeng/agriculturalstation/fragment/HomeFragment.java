@@ -10,6 +10,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ import com.rifeng.agriculturalstation.recyclerview.wrapper.HeaderAndFooterWrappe
 import com.rifeng.agriculturalstation.recyclerview.wrapper.LoadMoreWrapper;
 import com.rifeng.agriculturalstation.utils.BroadCastManager;
 import com.rifeng.agriculturalstation.utils.Consts;
+import com.rifeng.agriculturalstation.utils.CustomProgressDialog;
 import com.rifeng.agriculturalstation.utils.DateUtil;
 import com.rifeng.agriculturalstation.utils.LogUtil;
 import com.rifeng.agriculturalstation.utils.SharedPreferencesUtil;
@@ -94,6 +96,8 @@ public class HomeFragment extends BaseFragment {
     RecyclerView ownerRecyclerView;
     @BindView(R.id.home_owner_more)
     TextView homeOwnerMore;
+    @BindView(R.id.home_search_edit)
+    EditText searchText;
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private CommonAdapter<TaskBean> mAdapter;
@@ -111,6 +115,8 @@ public class HomeFragment extends BaseFragment {
     private List<TaskBean> taskList = new ArrayList<>();
     private List<FarmerList> farmList = new ArrayList<>();
     private List<OwnerList> locomotiveList = new ArrayList<>();
+
+    private CustomProgressDialog dialog;
 
 
 
@@ -151,6 +157,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initData() {
+        dialog = new CustomProgressDialog(getActivity(), "正在搜索中...");
         idTitleLeft.setVisibility(View.GONE);
         idTitleMiddle.setText("首页");
 
@@ -163,6 +170,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void lazyLoad() {
         if (!isVisible) {
+            searchText.setText("");
             return;
         }else {
             LogUtil.i("TAG", "HomeFragment --- UI布局可见");
@@ -182,7 +190,7 @@ public class HomeFragment extends BaseFragment {
                 holder.setText(R.id.taskcenter_item_crops, String.valueOf(Html.fromHtml(taskBean.content)));
                 holder.setText(R.id.taskcenter_item_area, "作业面积：" + taskBean.operatingarea + "亩");
                 holder.setText(R.id.taskcenter_item_totalPrice, "项目款：￥" + taskBean.totalprice);
-                holder.setText(R.id.taskcenter_item_undertakeType, taskBean.needstar + "星以上用户可接");
+                holder.setText(R.id.taskcenter_item_undertakeType, "本地用户 和 "+taskBean.needstar + " 星以上用户可接");
                 holder.setText(R.id.taskcenter_item_endtime, "竞标截止日期：" + DateUtil.getTime(taskBean.enddate + "", "yyyy-MM-dd"));
             }
         };
@@ -192,6 +200,7 @@ public class HomeFragment extends BaseFragment {
 
         // 设置适配器数据
         taskRecyclerView.setAdapter(mLoadMoreWrapper);
+        taskRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL_LIST));
         // 设置item点击事件
         mAdapter.setOnItemClickListener(new CommonAdapter.OnItemClickListener() {
 
@@ -332,7 +341,10 @@ public class HomeFragment extends BaseFragment {
                 });
     }
 
-    @OnClick({R.id.home_forum, R.id.home_search, R.id.home_relese, R.id.home_farmer, R.id.home_owner, R.id.home_taskcenter, R.id.home_flash, R.id.home_task_more, R.id.home_farmer_more, R.id.home_owner_more})
+    @OnClick({R.id.home_forum, R.id.home_search, R.id.home_relese,
+            R.id.home_farmer, R.id.home_owner, R.id.home_taskcenter,
+            R.id.home_flash, R.id.home_task_more, R.id.home_farmer_more,
+            R.id.home_owner_more})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.home_forum: // 论坛
@@ -349,11 +361,6 @@ public class HomeFragment extends BaseFragment {
                 } else {
                     ToastUtil.showShort(getContext(), "您不是农场主哦");
                 }
-                break;
-
-            case R.id.home_search: // 搜索
-                // 跳转到搜索界面
-                startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
 
             case R.id.home_farmer: // 农场主
@@ -399,6 +406,50 @@ public class HomeFragment extends BaseFragment {
                 locoIntent.putExtra("type", "all");
                 startActivity(locoIntent);
                 break;
+            case R.id.home_search: // 搜索
+                searchData(true);
+                break;
+
         }
+    }
+
+
+    /**
+     * 搜索数据
+     */
+    private void searchData(boolean isShow) {
+        if (TextUtils.isEmpty(searchText.getText().toString().trim())) {
+            ToastUtil.showShort(getActivity(), "请输入搜索内容");
+            return;
+        }
+        if (isShow) {
+            dialog.show();
+        }
+        dialog.show();
+        // 拼接参数
+        OkGo.post(Urls.URL_TASK_SEARCH)
+                .tag(this)
+                .params("name", searchText.getText().toString().trim())
+                .execute(new JsonCallback<List<TaskBean>>() {
+                    @Override
+                    public void onSuccess(List<TaskBean> taskBeanList, Call call, Response response) {
+                        dialog.dismiss();
+                        if (taskList.size() > 0) {
+                            taskList.clear();
+                        }
+                        if (taskBeanList.size() > 0) {
+                            taskList.addAll(taskBeanList);
+                            initialize();
+                        }
+                        mLoadMoreWrapper.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dialog.dismiss();
+                        ToastUtil.showShort(getActivity(), "查询失败");
+                    }
+                });
     }
 }

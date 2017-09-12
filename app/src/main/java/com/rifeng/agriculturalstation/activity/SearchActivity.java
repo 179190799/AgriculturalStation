@@ -107,8 +107,8 @@ public class SearchActivity extends BaseActivity {
                 holder.setText(R.id.taskcenter_item_crops, String.valueOf(Html.fromHtml(taskBean.content)));
                 holder.setText(R.id.taskcenter_item_area, "作业面积：" + taskBean.operatingarea + "亩");
                 holder.setText(R.id.taskcenter_item_totalPrice, "项目款：￥" + taskBean.totalprice);
-                holder.setText(R.id.taskcenter_item_undertakeType, taskBean.meetuser);
-                holder.setText(R.id.taskcenter_item_endtime, "竞标截止日期：" + DateUtil.getTime(taskBean.enddate + "", "yyyy-MM-dd"));
+                holder.setText(R.id.taskcenter_item_undertakeType,"本地用户 和 "+taskBean.needstar + " 星以上用户可接");
+//                holder.setText(R.id.taskcenter_item_endtime, "竞标截止日期：" + DateUtil.getTime(taskBean.enddate + "", "yyyy-MM-dd"));
             }
         };
 

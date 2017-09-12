@@ -1,53 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/dialog_pay_price"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:text="须支付金额：1000.00￥"
-        android:textColor="@android:color/holo_red_light"/>
+        android:textColor="@android:color/holo_red_light" />
 
-    <RadioGroup
-        android:id="@+id/pay_way_rg"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp">
+        android:gravity="center">
 
-        <RadioButton
-            android:id="@+id/alipay_rb"
+        <RadioGroup
+            android:id="@+id/pay_way_rg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
-            android:drawableRight="@mipmap/ic_alipay" />
+            android:layout_margin="10dp">
 
-        <RadioButton
-            android:id="@+id/weixin_rb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:drawableLeft="@mipmap/ic_weixin"
-            android:drawablePadding="5dp"
-            android:text="微信支付" />
+            <RadioButton
+                android:id="@+id/alipay_rb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:drawableRight="@mipmap/ic_alipay" />
 
-        <RadioButton
-            android:id="@+id/balance_rb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="账户余额" />
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/weixin_rb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:drawableLeft="@mipmap/ic_weixin"
+                android:drawablePadding="5dp"
+                android:text="微信支付" />
+
+            <RadioButton
+                android:id="@+id/balance_rb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="账户余额" />
+        </RadioGroup>
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/dialog_pay_btn"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/mine_btn_selector"
         android:text="确 认"
         android:textColor="@android:color/white" />

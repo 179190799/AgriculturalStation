@@ -29,7 +29,7 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/withdrawal_price_et"
+            android:id="@+id/withdrawal_money"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/withdrawal_price_unit"
@@ -108,17 +108,17 @@
             android:textSize="18sp" />
 
         <EditText
-            android:singleLine="true"
-            android:gravity="center"
-            android:textColor="#FFA853"
-            android:id="@+id/withdrawal_bank_card__userName"
+            android:id="@+id/withdrawal_userName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/center1"
             android:layout_toRightOf="@+id/tv_withdrawal_userName"
             android:layout_weight="4"
-            android:maxLines="1"/>
+            android:gravity="center"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="#FFA853" />
 
         <TextView
             android:id="@+id/center1"
@@ -141,15 +141,15 @@
         android:textSize="18sp" />
 
     <EditText
-        android:singleLine="true"
-        android:gravity="center"
+        android:id="@+id/withdrawal_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:id="@+id/withdrawal_account"
-        android:textColor="#FFA853"
+        android:gravity="center"
         android:maxLines="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:singleLine="true"
+        android:textColor="#FFA853" />
 
     <Button
         android:id="@+id/withdrawal_finish"

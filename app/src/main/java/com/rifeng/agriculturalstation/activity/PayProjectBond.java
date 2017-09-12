@@ -63,7 +63,7 @@ public class PayProjectBond extends BaseActivity {
     private int taskid;//该任务id
     private double taskmoney;//需要支付的金额
 
-    private int paytype = 1; //支付方式
+    private int paytype = 3; //支付方式
     private double balancemoney = 0.0; //余额
     private int startactivity;
 

@@ -20,6 +20,8 @@ import com.loopj.android.http.RequestParams;
 import com.lzy.okgo.OkGo;
 import com.rifeng.agriculturalstation.BaseActivity;
 import com.rifeng.agriculturalstation.R;
+import com.rifeng.agriculturalstation.bean.EeventBusBean;
+import com.rifeng.agriculturalstation.bean.PayStagesBean;
 import com.rifeng.agriculturalstation.bean.ServerResult;
 import com.rifeng.agriculturalstation.bean.StagesPayBean;
 import com.rifeng.agriculturalstation.bean.TaskBean;
@@ -37,10 +39,13 @@ import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 
 import org.apache.http.Header;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,8 +114,11 @@ public class TaskCenterDetailsActivity extends BaseActivity {
     private float joinmoney; //任务投标所需交付的保证金
     private int regType; // 发布的任务（农场主 1）/ 参与的任务（农机手 2）
     private int taskid;
-//    private CustomProgressDialog dialog;
+    private CustomProgressDialog dialog;
     private ArrayList<StagesPayBean> stagesPayList = new ArrayList<>();
+
+    //支付进度款数据
+    private List<PayStagesBean> payStagesList = new ArrayList<>();
 
     private int status;//支付状态，判断农场主是否已经支付发布任务的项目保证金，0未支付，1已支付
     private int pass;//审核状态，审核农场主发布的任务，1表示已审核，不用判断status。否则进一步判断status
@@ -127,7 +135,8 @@ public class TaskCenterDetailsActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-//        dialog = new CustomProgressDialog(this, "正在加载...");
+        EventBus.getDefault().register(this);
+        dialog = new CustomProgressDialog(this, "正在加载...");
         // 获取注册类型，农场主/农机手
         regType = (int) SharedPreferencesUtil.get(mContext, Consts.USER_REGTYPE, 0);
         idTitleMiddle.setText("任务详情");
@@ -156,6 +165,7 @@ public class TaskCenterDetailsActivity extends BaseActivity {
         Log.e(TAG, "------ taskBean.id : ------ " + taskBean.id);
         setDatas();
         getAccountLevel();
+        getStagesPayDatas(true);
     }
 
     /**
@@ -260,8 +270,6 @@ public class TaskCenterDetailsActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         LogUtil.i("TAG", "TaskCenterDetailsActivity ---> onResume");
-        getStagesPay();
-        setDatas();
     }
 
 
@@ -297,33 +305,38 @@ public class TaskCenterDetailsActivity extends BaseActivity {
                 });
     }
 
-//    //参与投标
-//    private void accpetTask() {
-//        OkGo.post(Urls.URL_ACCEPT_TASK)
-//                .tag(this)
-//                .params("uid", (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0))
-//                .params("taskid", taskid)
-//                .execute(new JsonCallback<ServerResult>() {
-//                    @Override
-//                    public void onSuccess(ServerResult serverResult, Call call, Response response) {
-//
-//                        if (serverResult.code == 101) {
-//                            ToastUtil.showShort(mContext, serverResult.msg);
-//                        } else {
-//                            Bundle bundle = new Bundle();
-//                            bundle.putString("payCost", payCost);
-//                            bundle.putInt("taskid", taskid);
-//                            startActivity(TouBiaoPayActivity.class, bundle);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Call call, Response response, Exception e) {
-//                        super.onError(call, response, e);
-//                        ToastUtil.showShort(mContext, "网络错误");
-//                    }
-//                });
-//    }
+
+    // 获取支付进度款记录
+    private void getStagesPayDatas(boolean isShow) {
+
+        if (isShow) {
+            dialog.show();
+        }
+        if (payStagesList.size()!=0) {
+            payStagesList.clear();
+        }
+        // 拼接参数
+        OkGo.post(Urls.URL_TASK_PAY_STAGES)
+                .tag(this)
+                .params("taskid", taskid)
+                .execute(new JsonCallback<List<PayStagesBean>>() {
+                    @Override
+                    public void onSuccess(List<PayStagesBean> stagesPayBeens, Call call, Response response) {
+                        dialog.dismiss();
+                        if (stagesPayBeens.size() > 0) {
+                            payStagesList.addAll(stagesPayBeens);
+                            Log.e("TAG", "payStagesList: "+payStagesList );
+                        }
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dialog.dismiss();
+                        ToastUtil.showShort(mContext, "网络错误");
+                    }
+                });
+    }
 
     @OnClick({R.id.id_title_left, R.id.alltask_details_joinbtn, R.id.pay_status})
     public void onClick(View view) {
@@ -334,7 +347,6 @@ public class TaskCenterDetailsActivity extends BaseActivity {
             case R.id.pay_status://支付保证金
 
                 if (regType == 1) {
-
                     if (taskUId == uid) {//证明发布该任务的农场主和登录账号的农场主为一个人可以继续操作
                         Bundle bundle = new Bundle();
                         bundle.putDouble("taskmoney", taskmoney);
@@ -377,21 +389,47 @@ public class TaskCenterDetailsActivity extends BaseActivity {
                     case 2: // 作业中
                         if (regType == 1) {
 //                            joinbtn.setText("支付进度款");
-                            if (stagesPayList.size() > 0) { // 已经设置过了分期次数
+//                            if (stagesPayList.size() > 0) { // 已经设置过了分期次数
+//                                Bundle bundle = new Bundle();
+//                                bundle.putInt("taskid", taskid);
+//                                bundle.putParcelableArrayList("stagesPayList", stagesPayList);
+//                                startActivity(PayStagesActivity.class, bundle);
+//                            } else {
+//                                alertDialogFenQi();
+//                            }
+
+                            if (payStagesList.size() > 0) { // 已经设置过了分期次数
+//                                bundle.putParcelableArrayList("stagesPayList", stagesPayList);
                                 Bundle bundle = new Bundle();
                                 bundle.putInt("taskid", taskid);
-                                bundle.putParcelableArrayList("stagesPayList", stagesPayList);
+                                bundle.putSerializable("payStagesList", (Serializable) payStagesList);
                                 startActivity(PayStagesActivity.class, bundle);
+//                                ToastUtil.showShort(mContext,"已经设置了分期次数！");
                             } else {
                                 alertDialogFenQi();
                             }
                         } else {
 //                            joinbtn.setText("确认支付进度款");
-                            if (stagesPayList.size() > 0) { // 已经设置过了分期次数
+//                            if (stagesPayList.size() > 0) { // 已经设置过了分期次数
+//                                Bundle bundle = new Bundle();
+//                                bundle.putInt("taskid", taskid);
+//                                bundle.putParcelableArrayList("stagesPayList", stagesPayList);
+//                                startActivity(PayStagesActivity.class, bundle);
+//                            }
+
+                            if (payStagesList.size() > 0) { // 已经设置过了分期次数
+//                                Bundle bundle = new Bundle();
+//                                bundle.putInt("taskid", taskid);
+//                                bundle.putParcelableArrayList("stagesPayList", stagesPayList);
+//                              startActivity(PayStagesActivity.class, bundle);
                                 Bundle bundle = new Bundle();
                                 bundle.putInt("taskid", taskid);
-                                bundle.putParcelableArrayList("stagesPayList", stagesPayList);
+                                bundle.putSerializable("payStagesList", (Serializable) payStagesList);
                                 startActivity(PayStagesActivity.class, bundle);
+//                                ToastUtil.showShort(mContext, "农场主已经设置了分期次数!");
+
+                            } else {
+                                ToastUtil.showShort(mContext, "农场主未设置支付进度款!");
                             }
                         }
                         break;
@@ -432,5 +470,17 @@ public class TaskCenterDetailsActivity extends BaseActivity {
         });
     }
 
+    @Subscribe
+    public void onEvent(EeventBusBean event) {
+            if (event.getMsg().equals("支付成功")) {
+                getStagesPayDatas(true);
+                Log.e("TAG", "onEvent: "+event.getMsg());
+            }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

@@ -90,6 +90,8 @@ public class Urls {
     public static final String URL_FARMER_LOMOTIVE_INFO = SERVER + "app-locomotive-op-delowner.html";
     //支付项目保证金
     public static final String URL_PAY_PROJECT_BOND= SERVER + "app-task-op-paytask.html";
+    //提现
+    public static final String URL_WITH_DRAWAL= SERVER + "app-personalinfo-op-extract.html";
 
 }
 

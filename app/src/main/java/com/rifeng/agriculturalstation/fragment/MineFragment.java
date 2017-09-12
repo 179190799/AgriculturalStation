@@ -108,12 +108,11 @@ public class MineFragment extends BaseFragment {
     @Override
     protected void initData() {
         dialog = new CustomProgressDialog(getActivity(), "请稍候...");
-        obtainData();
+        setLevel((Integer) SharedPreferencesUtil.get(getActivity(),Consts.USER_STAR,0));
         Drawable drawableLeft = getActivity().getResources().getDrawable(R.mipmap.common_title_right);
         // 必须设置图片大小，否则不显示
         drawableLeft.setBounds(0, 0, drawableLeft.getMinimumWidth(), drawableLeft.getMinimumHeight());
         idTitleRight.setCompoundDrawables(drawableLeft, null, null, null);
-
         idTitleMiddle.setText(R.string.MineFragPersonalCenter);
         idTitleLeft.setVisibility(View.GONE);
         // 发布的任务（农场主 1）/ 参与的任务（农机手 2）
@@ -127,38 +126,38 @@ public class MineFragment extends BaseFragment {
         isLogin();
     }
 
-    private void obtainData() {
-        RequestParams params = new RequestParams();
-        params.put("uid", SharedPreferencesUtil.get(getActivity(), Consts.USER_UID, 0));
-        AsyncHttpUtil.post(Urls.URL_ACCOUNT_INFO, params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-//                    int integral = response.getInt("integral");
-
-                    if (!getActivity().isFinishing()) {
-//                        accountBalanceTv.setText("￥" + tempBalance);
-//                        accountIntegralTv.setText(integral + "");
-                        setLevel(response.getInt("accountlevel"));
-
-//                        Log.e(TAG, "tempBalance: " + "￥" + tempBalance);
-//                        Log.e(TAG, "integral: " + integral + "");
-//                        Log.e(TAG, "accountlevel: " + response.getInt("accountlevel"));
-                    }
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-
-            }
-        });
-    }
+//    private void obtainData() {
+//        RequestParams params = new RequestParams();
+//        params.put("uid", SharedPreferencesUtil.get(getActivity(), Consts.USER_UID, 0));
+//        AsyncHttpUtil.post(Urls.URL_ACCOUNT_INFO, params, new JsonHttpResponseHandler() {
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//                try {
+////                    int integral = response.getInt("integral");
+//
+//                    if (!getActivity().isFinishing()) {
+////                        accountBalanceTv.setText("￥" + tempBalance);
+////                        accountIntegralTv.setText(integral + "");
+//                        setLevel(response.getInt("accountlevel"));
+//
+////                        Log.e(TAG, "tempBalance: " + "￥" + tempBalance);
+////                        Log.e(TAG, "integral: " + integral + "");
+////                        Log.e(TAG, "accountlevel: " + response.getInt("accountlevel"));
+//                    }
+//
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                super.onFailure(statusCode, headers, throwable, errorResponse);
+//
+//            }
+//        });
+//    }
 
     /**
      * 设置我的星级

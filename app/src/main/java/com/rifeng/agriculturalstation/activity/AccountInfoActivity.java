@@ -61,6 +61,7 @@ public class AccountInfoActivity extends BaseActivity {
         idTitleMiddle.setText("账户信息");
         // 获取数据
         obtainData();
+        setLevel((Integer) SharedPreferencesUtil.get(mContext,Consts.USER_STAR,0));
     }
 
     private void obtainData() {
@@ -77,11 +78,6 @@ public class AccountInfoActivity extends BaseActivity {
                     if (!AccountInfoActivity.this.isFinishing()) {
                         accountBalanceTv.setText("￥" + tempBalance);
                         accountIntegralTv.setText(integral + "");
-                        setLevel(response.getInt("accountlevel"));
-
-//                        Log.e(TAG, "tempBalance: " + "￥" + tempBalance);
-//                        Log.e(TAG, "integral: " + integral + "");
-//                        Log.e(TAG, "accountlevel: " + response.getInt("accountlevel"));
                     }
 
 

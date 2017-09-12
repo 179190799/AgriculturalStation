@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -111,7 +112,7 @@ public class FarmDetailsActivity extends BaseActivity {
         Intent intent = getIntent();
         farmerUserName = intent.getStringExtra("username");
         farmerUid = intent.getIntExtra("uid", 0);
-
+        Log.e("TAG", "farmerUid: " +farmerUid);
         initHeaderView();
         // 获取最新评论
         getLatestComments();

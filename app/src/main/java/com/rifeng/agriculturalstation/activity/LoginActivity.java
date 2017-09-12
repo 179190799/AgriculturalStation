@@ -89,6 +89,8 @@ public class LoginActivity extends BaseActivity {
                         SharedPreferencesUtil.put(LoginActivity.this, Consts.USER_AVATAR, serverResult.data.avatar);
                         // 存储用户的注册类型，农场主 1/农机手 2
                         SharedPreferencesUtil.put(LoginActivity.this, Consts.USER_REGTYPE, serverResult.data.regtype);
+                        //存储用户星级
+                        SharedPreferencesUtil.put(LoginActivity.this, Consts.USER_STAR, serverResult.data.userstar);
                         finish();
                     }
                 }

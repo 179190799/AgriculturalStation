@@ -2,8 +2,10 @@ package com.rifeng.agriculturalstation.activity;
 
 
 import android.app.Dialog;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import com.lzy.okgo.OkGo;
 import com.rifeng.agriculturalstation.BaseActivity;
 import com.rifeng.agriculturalstation.R;
+import com.rifeng.agriculturalstation.bean.PayStagesBean;
 import com.rifeng.agriculturalstation.bean.ServerResult;
 import com.rifeng.agriculturalstation.bean.StagesPayBean;
 import com.rifeng.agriculturalstation.callback.JsonCallback;
@@ -27,6 +30,7 @@ import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -47,10 +51,13 @@ public class PayStagesActivity extends BaseActivity {
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
-    private CommonAdapter<StagesPayBean> mAdapter;
+    private CommonAdapter<PayStagesBean> mAdapter;
     private HeaderAndFooterWrapper mHeaderAndFooterWrapper;
     private LoadMoreWrapper mLoadMoreWrapper;
     private ArrayList<StagesPayBean> stagesPayList = new ArrayList<>();
+
+    //接收传递过来的
+    private List<PayStagesBean> payStagesList = new ArrayList<>();
 
     private int taskId;
     private int payWay = 1; //支付方式：1 支付宝（默认）  2 微信  3 余额
@@ -66,22 +73,80 @@ public class PayStagesActivity extends BaseActivity {
         idTitleMiddle.setText("支付进度款");
         taskId = this.getIntent().getExtras().getInt("taskid", 0);
         stagesPayList = this.getIntent().getExtras().getParcelableArrayList("stagesPayList");
+        payStagesList = (List<PayStagesBean>) this.getIntent().getSerializableExtra("payStagesList");
+        Log.e("TAG", "payStagesBeanList: "+payStagesList );
         regtype = (int) SharedPreferencesUtil.get(this, Consts.USER_REGTYPE, 0);
-        initialize();
+//        initialize();
+        initializeTrue();
     }
 
-    private void initialize() {
+
+//    private void initialize() {
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        mAdapter = new CommonAdapter<StagesPayBean>(this, R.layout.item_pay_stages, stagesPayList) {
+//
+//            @Override
+//            protected void convert(ViewHolder holder, final StagesPayBean stagesPayBean, int position) {
+//                holder.setText(R.id.pay_stages_num, "第" + stagesPayBean.stages + "期");
+//                holder.setText(R.id.pay_stages_price, String.valueOf(stagesPayBean.money));
+//
+//                TextView payStatus = holder.getView(R.id.pay_stages_status);
+//                payStatus.setClickable(true);
+//                switch (stagesPayBean.status){ // 1 已付清  0 支付  2 未到期
+//                    case 0:{
+//                        if(regtype == 1){
+//                            payStatus.setText("支付");
+//                            payStatus.setBackgroundResource(R.drawable.input_shape);
+//                            payStatus.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    // 显示支付方式
+//                                    showPayWay(stagesPayBean.money, stagesPayBean.id);
+//                                }
+//                            });
+//                        }else if(regtype == 2){
+//                            payStatus.setText("未付清");
+//                            payStatus.setClickable(false);
+//                        }
+//                    }
+//                        break;
+//
+//                    case 1:
+//                        payStatus.setText("已付清");
+//                        payStatus.setClickable(false);
+//                        break;
+//
+//                    case 2:
+//                        if(regtype == 1){
+//                            payStatus.setText("未到期");
+//                            payStatus.setClickable(false);
+//                        }else if(regtype == 2){
+//                            payStatus.setText("未付清");
+//                            payStatus.setClickable(false);
+//                        }
+//                        break;
+//                }
+//            }
+//        };
+//
+//        mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(mAdapter);
+//        mLoadMoreWrapper = new LoadMoreWrapper(mHeaderAndFooterWrapper);
+//        // 设置适配器数据
+//        mRecyclerView.setAdapter(mLoadMoreWrapper);
+//    }
+
+    private void initializeTrue() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new CommonAdapter<StagesPayBean>(this, R.layout.item_pay_stages, stagesPayList) {
+        mAdapter = new CommonAdapter<PayStagesBean>(this, R.layout.item_pay_stages, payStagesList) {
 
             @Override
-            protected void convert(ViewHolder holder, final StagesPayBean stagesPayBean, int position) {
-                holder.setText(R.id.pay_stages_num, "第" + stagesPayBean.stages + "期");
-                holder.setText(R.id.pay_stages_price, String.valueOf(stagesPayBean.money));
+            protected void convert(ViewHolder holder, final PayStagesBean payStagesBean, int position) {
+                holder.setText(R.id.pay_stages_num, "第" + payStagesBean.getStages() + "期");
+                holder.setText(R.id.pay_stages_price, String.valueOf(payStagesBean.getMoney()));
 
                 TextView payStatus = holder.getView(R.id.pay_stages_status);
                 payStatus.setClickable(true);
-                switch (stagesPayBean.status){ // 1 已付清  0 支付  2 未到期
+                switch (payStagesBean.getStatus()){ // 1 已付清  0 支付  2 未到期
                     case 0:{
                         if(regtype == 1){
                             payStatus.setText("支付");
@@ -90,7 +155,14 @@ public class PayStagesActivity extends BaseActivity {
                                 @Override
                                 public void onClick(View v) {
                                     // 显示支付方式
-                                    showPayWay(stagesPayBean.money, stagesPayBean.id);
+//                                    showPayWay(stagesPayBean.money, stagesPayBean.id);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt("id",payStagesBean.getId());
+                                    bundle.putInt("taskid",taskId);
+                                    bundle.putString("money",payStagesBean.getMoney());
+                                    startActivity(PayStagesPayWayActivity.class, bundle);
+                                    finish();
+//                                    ToastUtil.showShort(mContext,"您点击了支付！");
                                 }
                             });
                         }else if(regtype == 2){
@@ -98,7 +170,7 @@ public class PayStagesActivity extends BaseActivity {
                             payStatus.setClickable(false);
                         }
                     }
-                        break;
+                    break;
 
                     case 1:
                         payStatus.setText("已付清");

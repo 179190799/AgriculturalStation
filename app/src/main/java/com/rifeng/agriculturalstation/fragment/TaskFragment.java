@@ -10,9 +10,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -97,6 +99,8 @@ public class TaskFragment extends BaseFragment {
     RecyclerView mRecyclerView;
     @BindView(R.id.task_center_swiperefresh)
     SwipeRefreshLayout mSwipeRefresh;
+    @BindView(R.id.home_search_edit)
+    EditText searchText;
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private CityJson cityJson;
@@ -164,6 +168,7 @@ public class TaskFragment extends BaseFragment {
     @Override
     protected void lazyLoad() {
         if (!isVisible) {
+            searchText.setText("");
             return;
         } else {
 
@@ -231,8 +236,9 @@ public class TaskFragment extends BaseFragment {
                 holder.setText(R.id.taskcenter_item_crops, String.valueOf(Html.fromHtml(taskBean.content)));
                 holder.setText(R.id.taskcenter_item_area, "作业面积：" + taskBean.operatingarea + "亩");
                 holder.setText(R.id.taskcenter_item_totalPrice, "项目款：￥" + taskBean.totalprice);
-                holder.setText(R.id.taskcenter_item_undertakeType, taskBean.meetuser);
-                holder.setText(R.id.taskcenter_item_endtime, "竞标截止日期：" + DateUtil.getTime(taskBean.enddate + "", "yyyy-MM-dd"));
+                holder.setText(R.id.taskcenter_item_undertakeType, "本地用户 和 " + taskBean.needstar + " 星以上用户可接");
+                Log.e("TAG", "taskBean.meetuser: " + taskBean.meetuser);
+//                holder.setText(R.id.taskcenter_item_endtime, "竞标截止日期：" + DateUtil.getTime(taskBean.enddate + "", "yyyy-MM-dd"));
             }
         };
 
@@ -443,8 +449,48 @@ public class TaskFragment extends BaseFragment {
 
             case R.id.home_search: // 搜索
                 // 跳转到搜索界面
-                startActivity(new Intent(getActivity(), SearchActivity.class));
+                searchData(true);
+//                startActivity(new Intent(getActivity(), SearchActivity.class));
                 break;
         }
+    }
+
+    /**
+     * 搜索数据
+     */
+    private void searchData(boolean isShow) {
+        if (TextUtils.isEmpty(searchText.getText().toString().trim())) {
+            ToastUtil.showShort(getActivity(), "请输入搜索内容");
+            return;
+        }
+        if (isShow) {
+            dialog.show();
+        }
+        dialog.show();
+        // 拼接参数
+        OkGo.post(Urls.URL_TASK_SEARCH)
+                .tag(this)
+                .params("name", searchText.getText().toString().trim())
+                .execute(new JsonCallback<List<TaskBean>>() {
+                    @Override
+                    public void onSuccess(List<TaskBean> taskBeanList, Call call, Response response) {
+                        dialog.dismiss();
+                        if (taskList.size() > 0) {
+                            taskList.clear();
+                        }
+                        if (taskBeanList.size() > 0) {
+                            taskList.addAll(taskBeanList);
+                            initialize();
+                        }
+                        mLoadMoreWrapper.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        dialog.dismiss();
+                        ToastUtil.showShort(getActivity(), "查询失败");
+                    }
+                });
     }
 }

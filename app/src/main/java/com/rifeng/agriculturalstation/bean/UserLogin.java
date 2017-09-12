@@ -10,4 +10,5 @@ public class UserLogin {
     public String phone;
     public String avatar;
     public int regtype;
+    public int userstar;
 }

@@ -142,6 +142,9 @@ public class BasePersonalInfoActivity extends BaseActivity implements View.OnCli
     private boolean isPhone = false;
     private boolean isAvatar = false;
 
+    private int uid;//打开的用户的id
+    private int UId;//登录中的用户的id
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -212,6 +215,32 @@ public class BasePersonalInfoActivity extends BaseActivity implements View.OnCli
         return R.layout.activity_basepersonalinfo;
     }
 
+
+
+    @Override
+    protected void initData() {
+        initView();
+        initEvent();
+        UId = (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0);
+        idTitleMiddle.setText("基础信息");
+        // 获取屏幕高度和宽度
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        screenW = wm.getDefaultDisplay().getWidth();
+//        int height = wm.getDefaultDisplay().getHeight();
+        piCertificate1.setMaxHeight(screenW);
+        piCertificate1.setAdjustViewBounds(true);
+
+        piCertificate2.setMaxHeight(screenW);
+        // 如果想设置ImageView的最大宽高，须设置为true
+        piCertificate2.setAdjustViewBounds(true);
+        userBean = (UserBean) this.getIntent().getSerializableExtra("userbean");
+        if (userBean != null) {
+            setUserBean();
+            uid = userBean.getUid();
+        } else {
+            getUserDatas();
+        }
+    }
     private void initView() {
         // 实例化弹出窗
         initPop();
@@ -236,30 +265,6 @@ public class BasePersonalInfoActivity extends BaseActivity implements View.OnCli
         popuCancel = (TextView) viewWindow.findViewById(R.id.popu_cancel);
         llPopup = (LinearLayout) viewWindow.findViewById(R.id.ll_popup);
         popuParent = (RelativeLayout) viewWindow.findViewById(R.id.popu_parent);
-    }
-
-    @Override
-    protected void initData() {
-        initView();
-        initEvent();
-
-        idTitleMiddle.setText("基础信息");
-        // 获取屏幕高度和宽度
-        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-        screenW = wm.getDefaultDisplay().getWidth();
-//        int height = wm.getDefaultDisplay().getHeight();
-        piCertificate1.setMaxHeight(screenW);
-        piCertificate1.setAdjustViewBounds(true);
-
-        piCertificate2.setMaxHeight(screenW);
-        // 如果想设置ImageView的最大宽高，须设置为true
-        piCertificate2.setAdjustViewBounds(true);
-        userBean = (UserBean) this.getIntent().getSerializableExtra("userbean");
-        if (userBean != null) {
-            setUserBean();
-        } else {
-            getUserDatas();
-        }
     }
 
     private void setUserBean() {
@@ -304,6 +309,7 @@ public class BasePersonalInfoActivity extends BaseActivity implements View.OnCli
 
                 @Override
                 public void onSuccess(UserBean userBean, Call call, Response response) {
+                    uid = userBean.getUid();
                     setUserData(userBean);
                     dialog.dismiss();
                 }
@@ -395,62 +401,92 @@ public class BasePersonalInfoActivity extends BaseActivity implements View.OnCli
                 break;
 
             case R.id.pi_avatar_rl: // 头像
-                curCamera = USER_AVATAR;
-                requestFlag = 0;
-                openPopupWindow();
+                if (UId == uid) {
+                    curCamera = USER_AVATAR;
+                    requestFlag = 0;
+                    openPopupWindow();
+                }
                 break;
-
             case R.id.pi_username_rl: // 用户名
-                bundle.putString("title", piUsernameTip.getText().toString().trim());
-                bundle.putString("content", piUsernameTv.getText().toString().trim());
-                requestFlag = 1;
+                if (UId == uid) {
+                    bundle.putString("title", piUsernameTip.getText().toString().trim());
+                    bundle.putString("content", piUsernameTv.getText().toString().trim());
+                    requestFlag = 1;
+                }
+
                 break;
 
             case R.id.pi_usertype_rl: // 用户类型
-                requestFlag = 0;
-                changeUserType();
+                if (UId == uid) {
+                    requestFlag = 0;
+                    changeUserType();
+                }
+
                 break;
 
             case R.id.pi_phone_rl: // 联系电话
-                bundle.putString("title", piPhoneTip.getText().toString().trim());
-                bundle.putString("content", piPhoneTv.getText().toString().trim());
-                requestFlag = 2;
+                if (UId == uid) {
+                    bundle.putString("title", piPhoneTip.getText().toString().trim());
+                    bundle.putString("content", piPhoneTv.getText().toString().trim());
+                    requestFlag = 2;
+                }
+
                 break;
 
             case R.id.pi_realname_rl: // 真实姓名
-                bundle.putString("title", piRealnameTip.getText().toString().trim());
-                bundle.putString("content", piRealnameTv.getText().toString().trim());
-                requestFlag = 3;
+                if (UId == uid) {
+                    bundle.putString("title", piRealnameTip.getText().toString().trim());
+                    bundle.putString("content", piRealnameTv.getText().toString().trim());
+                    requestFlag = 3;
+                }
+
                 break;
 
             case R.id.pi_idcard_rl: // 身份证号
-                bundle.putString("title", piIdcardTip.getText().toString().trim());
-                bundle.putString("content", piIdcardTv.getText().toString().trim());
-                requestFlag = 4;
+                if (UId == uid) {
+                    bundle.putString("title", piIdcardTip.getText().toString().trim());
+                    bundle.putString("content", piIdcardTv.getText().toString().trim());
+                    requestFlag = 4;
+                }
+
                 break;
 
             case R.id.pi_nativeplace_rl: // 籍贯
-                requestFlag = 0;
-                // 选择籍贯
-                selectNativePlace();
+                if (UId == uid) {
+                    requestFlag = 0;
+                    // 选择籍贯
+                    selectNativePlace();
+                }
+
                 break;
 
             case R.id.pi_address_rl: // 详细地址
-                bundle.putString("title", piAddressTip.getText().toString().trim());
-                bundle.putString("content", piAddressTv.getText().toString().trim());
-                requestFlag = 5;
+                if (UId == uid) {
+                    bundle.putString("title", piAddressTip.getText().toString().trim());
+                    bundle.putString("content", piAddressTv.getText().toString().trim());
+                    requestFlag = 5;
+                }
+
                 break;
 
             case R.id.pi_certificate_1: // 相关证件一
-                requestFlag = 0;
-                curCamera = CAMERA_ONE;
-                openPopupWindow();
+                if (UId == uid) {
+                    requestFlag = 0;
+                    curCamera = CAMERA_ONE;
+                    openPopupWindow();
+                } else {
+                    ToastUtil.showShort(mContext,"您不可以修改他人信息哦！");
+                }
                 break;
 
             case R.id.pi_certificate_2: // 相关证件二
-                requestFlag = 0;
-                curCamera = CAMERA_TWO;
-                openPopupWindow();
+                if (UId == uid) {
+                    requestFlag = 0;
+                    curCamera = CAMERA_TWO;
+                    openPopupWindow();
+                }else {
+                    ToastUtil.showShort(mContext,"您不可以修改他人信息哦！");
+                }
                 break;
 
             case R.id.popu_parent: //
@@ -460,15 +496,14 @@ public class BasePersonalInfoActivity extends BaseActivity implements View.OnCli
 
             case R.id.popu_camera: // 拍照
                 requestFlag = 0;
-                // TODO 调起系统的拍照功能
+                // 调起系统的拍照功能
                 camera();
-
                 closePopupWindow();
                 break;
 
             case R.id.popu_photo: // 从相册中选择
                 requestFlag = 0;
-                // TODO 调起系统中的相册
+                //调起系统中的相册
                 photoAlbum();
                 closePopupWindow();
                 break;
