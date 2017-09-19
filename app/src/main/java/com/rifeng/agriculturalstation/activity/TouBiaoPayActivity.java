@@ -12,9 +12,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
 import com.rifeng.agriculturalstation.BaseActivity;
 import com.rifeng.agriculturalstation.R;
 import com.rifeng.agriculturalstation.bean.ServerResult;
@@ -32,6 +34,9 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -72,6 +77,9 @@ public class TouBiaoPayActivity extends BaseActivity {
     private int taskid;
     private float joinmoney;
 
+    private ArrayList<Integer> offermoneyList = new ArrayList<>();
+    private ArrayList<Integer> offerdayList = new ArrayList<>();
+
     //    private double taskPrice; // 任务价格
     private CustomProgressDialog dialog;
 
@@ -88,19 +96,27 @@ public class TouBiaoPayActivity extends BaseActivity {
 
         dialog = new CustomProgressDialog(this, "请稍候...");
         idTitleMiddle.setText("支付");
-
 //        taskid = this.getIntent().getExtras().getInt("taskid");
 //        taskPrice = Double.valueOf(this.getIntent().getExtras().getString("payCost"));
-
         Bundle bundle = this.getIntent().getExtras();
         taskid = bundle.getInt("taskid");
         joinmoney = bundle.getFloat("joinmoney");
+        if (offerdayList.size()!=0) {
+            offerdayList.clear();
+        }
+        if (offermoneyList.size()!=0) {
+            offermoneyList.clear();
+        }
+        offerdayList = bundle.getIntegerArrayList("offerdayList");
+        offermoneyList = bundle.getIntegerArrayList("offermoneyList");
+        payMoney.setText(joinmoney + "");
+        getBalance();
+        Log.e(TAG, "offerdayList: "+offerdayList);
+        Log.e(TAG, "offermoneyList: "+offermoneyList);
 
 //        taskPrice = Double.parseDouble(bundle.getString("payCost"));
 //        payCost.setText(Html.fromHtml("本次需支付金额为：<font color='#FF9F3F'>" + taskPrice + "</font>元"));
 
-        payMoney.setText(joinmoney + "");
-        getBalance();
 
         Log.e(TAG, "uid: " + (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0));
         Log.e(TAG, "taskid: " + taskid);
@@ -154,11 +170,22 @@ public class TouBiaoPayActivity extends BaseActivity {
      * 余额支付项目款
      */
     private void payTaskCost() {
+//        HttpParams params = new HttpParams();
+//        for (int i = 0; i < offermoneyList.size(); i++) {
+//            params.put("offermoney",offermoneyList.get(i));
+//            params.put("offerday",offerdayList.get(i));
+//        }
+        Gson gson = new Gson();
+        String toJson = gson.toJson(offerdayList);
+        String toJson1 = gson.toJson(offermoneyList);
+        Log.e(TAG, "toJson: "+toJson);
         OkGo.post(Urls.URL_BALANCE_TBPAY)
                 .tag(this)
                 .params("uid", (int) SharedPreferencesUtil.get(mContext, Consts.USER_UID, 0))
                 .params("taskid", taskid)
                 .params("paytype", payType)
+                .params("offermoney",toJson)
+                .params("offerday", toJson1)
                 .execute(new JsonCallback<ServerResult>() {
                     @Override
                     public void onSuccess(ServerResult serverResult, Call call, Response response) {

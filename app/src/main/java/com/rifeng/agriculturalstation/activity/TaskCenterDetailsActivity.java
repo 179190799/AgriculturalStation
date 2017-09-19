@@ -371,10 +371,11 @@ public class TaskCenterDetailsActivity extends BaseActivity {
                             if (accountlevel >= taskBean.needstar) {
 //                                accpetTask();
                                 Bundle bundle = new Bundle();
-                                bundle.putString("payCost", payCost);
+//                                bundle.putString("payCost", payCost);
                                 bundle.putInt("taskid", taskid);
                                 bundle.putFloat("joinmoney", joinmoney);
-                                startActivity(TouBiaoPayActivity.class, bundle);
+//                                startActivity(TouBiaoPayActivity.class, bundle);
+                                startActivity(TaskTouBiaoActivity.class, bundle);
 
                             } else {
                                 ToastUtil.showLong(this, "您的等级不足！");

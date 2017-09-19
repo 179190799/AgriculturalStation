@@ -105,6 +105,8 @@
         <activity android:name=".activity.TradingRecordActivity" />
         <activity android:name=".activity.PayProjectBond" />
         <activity android:name=".activity.PayStagesPayWayActivity" />
+        <activity android:name=".activity.TaskTouBiaoActivity" />
+        <activity android:name=".activity.SeeTheFormActivity" />
         <!--支付宝支付-->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"

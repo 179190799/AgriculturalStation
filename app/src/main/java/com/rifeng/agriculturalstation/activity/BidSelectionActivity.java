@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -73,7 +74,7 @@ public class BidSelectionActivity extends BaseActivity {
         dialog = new CustomProgressDialog(this, "正在加载...");
         idTitleMiddle.setText("选标");
         taskid = this.getIntent().getExtras().getInt("taskid");
-
+        Log.e(TAG, "taskid: "+taskid );
         getDatas(true);
         initialize();
     }
@@ -81,18 +82,22 @@ public class BidSelectionActivity extends BaseActivity {
     private void initialize() {
         mSwipeRefresh.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_red_light,
                 android.R.color.holo_orange_light, android.R.color.holo_green_light);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mAdapter = new CommonAdapter<UserBean>(this, R.layout.item_biduser, userList) {
+        mAdapter = new CommonAdapter<UserBean>(this, R.layout.item_bid_select, userList) {
             @Override
             protected void convert(ViewHolder holder, final UserBean userBean, int position) {
-                imageLoader.displayImage(Urls.SERVER + userBean.getAvatar(), (ImageView) holder.getView(R.id.bid_user_avatar));
-                holder.setText(R.id.bid_user_name, "农机主：" + userBean.getUsername());
-                holder.setText(R.id.bid_user_phone, "手机：" + userBean.getPhone());
-                holder.setText(R.id.bid_user_address, "地址：" + userBean.getResideaddress());
+                imageLoader.displayImage(Urls.SERVER + userBean.getAvatar(), (ImageView) holder.getView(R.id.bid_select_avatar));
+                holder.setText(R.id.bid_select_user_name, "农机主：" + userBean.getUsername());
+                holder.setText(R.id.bid_select_user_phone, "手机：" + userBean.getPhone());
+                holder.setText(R.id.bid_select_user_address, "地址：" + userBean.getResideaddress());
+                if (userBean.getRecommend()!=1) {
+                    holder.setVisible(R.id.bid_select_recommend, false);
+
+                }
 
                 // 选择此人
-                holder.getView(R.id.bid_user_selection).setOnClickListener(new View.OnClickListener() {
+                holder.getView(R.id.bid_select_selection).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         selectionUser(userBean.getUid());
@@ -100,12 +105,24 @@ public class BidSelectionActivity extends BaseActivity {
                 });
 
                 // 查看信息
-                holder.getView(R.id.bid_user_info).setOnClickListener(new View.OnClickListener() {
+                holder.getView(R.id.bid_select_user_info).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("userbean", userBean);
                         startActivity(BasePersonalInfoActivity.class, bundle);
+                    }
+                });
+
+                //查看报表
+                holder.getView(R.id.big_select_see_form).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("taskid",taskid);
+                        bundle.putInt("uid",userBean.getUid());
+                        startActivity(SeeTheFormActivity.class,bundle);
+
                     }
                 });
             }

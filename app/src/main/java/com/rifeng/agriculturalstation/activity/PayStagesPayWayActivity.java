@@ -130,6 +130,7 @@ public class PayStagesPayWayActivity extends BaseActivity {
                             ToastUtil.showShort(mContext, serverResult.msg);
                             if(serverResult.code == 200){ // 支付成功
                                 finish();
+                                EventBus.getDefault().post(new EeventBusBean("支付成功"));
                             }
                         }
                     }
@@ -154,7 +155,6 @@ public class PayStagesPayWayActivity extends BaseActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     payStages(paytype);
-                    EventBus.getDefault().post(new EeventBusBean("支付成功"));
                 }
             });
             builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {

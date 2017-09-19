@@ -71,7 +71,7 @@ public class Urls {
     // 发布任务
     public static final String URL_RELEASE_TASK = SERVER + "app-task-op-release.html";
     // 搜索界面
-    public static final String URL_TASK_SEARCH = SERVER + "app-task-op-search.html";
+    public static final String URL_TASK_SEARCH = SERVER + "app-task-op-all.html";
     // 投标支付
     public static final String URL_ACCOUNT_BALANCE = SERVER + "app-task-op-balance.html"; // 获取账户余额
     public static final String URL_BALANCE_TBPAY = SERVER + "app-task-op-tbpay.html";// 余额支付项目款
@@ -83,6 +83,7 @@ public class Urls {
     public static final String URL_FORUM_LIST = SERVER + "app-forum-op-list.html";
     // 抢单中心，任务中心
     public static final String URL_TASK_LIST = SERVER + "app-task-op-all.html";
+
     // 主页
     public static final String URL_HOME_INFO = SERVER + "app-homeinfo-op-home.html";
 
@@ -92,6 +93,12 @@ public class Urls {
     public static final String URL_PAY_PROJECT_BOND= SERVER + "app-task-op-paytask.html";
     //提现
     public static final String URL_WITH_DRAWAL= SERVER + "app-personalinfo-op-extract.html";
+
+
+    //任务投标
+    public static final String URL_TASK_SELECT= SERVER + "app-task-op-tbpay.html";
+    //获取报表数据
+    public static final String URL_FORM_DATA= SERVER + "app-task-op-owneroffer.html";
 
 }
 

@@ -11,6 +11,12 @@ public class UserBean implements Serializable {
      * 用户id
      */
     private int uid;
+
+    public int getRecommend() {
+        return recommend;
+    }
+
+    private int recommend;
     /**
      * 头像
      */

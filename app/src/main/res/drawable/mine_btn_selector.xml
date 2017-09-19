@@ -7,7 +7,7 @@
                 android:color="@color/colorBlueDark"/>
 
             <corners
-                android:radius="4dp"/>
+                android:radius="2dp"/>
         </shape>
     </item>
 
@@ -17,7 +17,7 @@
                 android:color="@color/colorGreenDark"/>
 
             <corners
-                android:radius="4dp"/>
+                android:radius="2dp"/>
         </shape>
     </item>
 </selector>

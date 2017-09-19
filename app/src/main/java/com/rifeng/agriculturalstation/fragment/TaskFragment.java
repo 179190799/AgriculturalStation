@@ -466,11 +466,12 @@ public class TaskFragment extends BaseFragment {
         if (isShow) {
             dialog.show();
         }
-        dialog.show();
         // 拼接参数
         OkGo.post(Urls.URL_TASK_SEARCH)
                 .tag(this)
-                .params("name", searchText.getText().toString().trim())
+                .params("searchname", searchText.getText().toString().trim())
+                .params("start",0)
+                .params("perpage",perpage)
                 .execute(new JsonCallback<List<TaskBean>>() {
                     @Override
                     public void onSuccess(List<TaskBean> taskBeanList, Call call, Response response) {

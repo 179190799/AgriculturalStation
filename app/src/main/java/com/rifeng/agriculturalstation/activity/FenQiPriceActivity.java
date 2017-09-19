@@ -5,14 +5,17 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.rifeng.agriculturalstation.BaseActivity;
 import com.rifeng.agriculturalstation.R;
+import com.rifeng.agriculturalstation.bean.EeventBusBean;
 import com.rifeng.agriculturalstation.bean.ServerResult;
 import com.rifeng.agriculturalstation.callback.JsonCallback;
 import com.rifeng.agriculturalstation.recyclerview.CommonAdapter;
@@ -22,6 +25,8 @@ import com.rifeng.agriculturalstation.recyclerview.wrapper.LoadMoreWrapper;
 import com.rifeng.agriculturalstation.utils.LogUtil;
 import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +59,7 @@ public class FenQiPriceActivity extends BaseActivity {
     private LoadMoreWrapper mLoadMoreWrapper;
     private List<Integer> numList = new ArrayList<>();
 
-    private List<String> mPriceList = new ArrayList<>();
+    private List<Integer> mPriceList = new ArrayList<>();
     private Map<Integer, String> priceMap = new HashMap<>();
 
     private int taskId;
@@ -129,7 +134,7 @@ public class FenQiPriceActivity extends BaseActivity {
                         ToastUtil.showShort(FenQiPriceActivity.this, "请先设置完分期数");
                     }else {
                         for(int i = 0; i < priceMap.size(); i++){
-                            mPriceList.add(priceMap.get(i));
+                            mPriceList.add(Integer.valueOf(priceMap.get(i)));
                         }
 //                        for(int k = 0; k < mPriceList.size(); k++){
 //                            LogUtil.i("TAG", "Value ---> " + mPriceList.get(k));
@@ -141,16 +146,25 @@ public class FenQiPriceActivity extends BaseActivity {
     }
 
     private void stagesSubmit() {
+        Gson gson = new Gson();
+        String toJson = gson.toJson(mPriceList);
+        Log.e(TAG, "taskId: "+taskId);
+        Log.e(TAG, "toJson: "+toJson);
+
         // 拼接参数
         OkGo.post(Urls.URL_TASK_STAGES)
             .tag(this)
             .params("taskid", taskId)
-            .addUrlParams("stages", mPriceList)
+            .params("stages", toJson)
+//            .addUrlParams("stages", mPriceList)
             .execute(new JsonCallback<ServerResult>() {
                 @Override
                 public void onSuccess(ServerResult serverResult, Call call, Response response) {
                     ToastUtil.showShort(FenQiPriceActivity.this, serverResult.msg);
-                    finish();
+                    if (serverResult.code!=-1) {
+                        EventBus.getDefault().post(new EeventBusBean("支付成功"));
+                        finish();
+                    }
                 }
 
                 @Override
