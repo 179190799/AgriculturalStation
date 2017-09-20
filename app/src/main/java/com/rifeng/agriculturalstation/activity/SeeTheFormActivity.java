@@ -1,24 +1,30 @@
 package com.rifeng.agriculturalstation.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lzy.okgo.OkGo;
 import com.rifeng.agriculturalstation.BaseActivity;
 import com.rifeng.agriculturalstation.R;
+import com.rifeng.agriculturalstation.adapter.FormAdapter;
+import com.rifeng.agriculturalstation.adapter.FormAdapter2;
 import com.rifeng.agriculturalstation.bean.FormBean;
 import com.rifeng.agriculturalstation.bean.ServerResult;
 import com.rifeng.agriculturalstation.callback.JsonCallback;
-import com.rifeng.agriculturalstation.utils.Consts;
+import com.rifeng.agriculturalstation.recyclerview.DividerItemDecoration;
+import com.rifeng.agriculturalstation.recyclerview.wrapper.HeaderAndFooterWrapper;
+import com.rifeng.agriculturalstation.recyclerview.wrapper.LoadMoreWrapper;
+import com.rifeng.agriculturalstation.utils.CommonAdapter;
 import com.rifeng.agriculturalstation.utils.CustomProgressDialog;
 import com.rifeng.agriculturalstation.utils.LogUtil;
-import com.rifeng.agriculturalstation.utils.SharedPreferencesUtil;
 import com.rifeng.agriculturalstation.utils.ToastUtil;
 import com.rifeng.agriculturalstation.utils.Urls;
+import com.rifeng.agriculturalstation.utils.ViewHolder;
 
 import java.util.List;
 
@@ -33,6 +39,7 @@ import okhttp3.Response;
  */
 
 public class SeeTheFormActivity extends BaseActivity {
+
     @BindView(R.id.id_title_left)
     TextView idTitleLeft;
     @BindView(R.id.id_title_middle)
@@ -45,21 +52,12 @@ public class SeeTheFormActivity extends BaseActivity {
     TextView totalNumber;
     @BindView(R.id.ll_title)
     LinearLayout llTitle;
-    @BindView(R.id.offermoney_1)
-    EditText offermoney1;
-    @BindView(R.id.offerday_1)
-    EditText offerday1;
-    @BindView(R.id.offermoney_2)
-    EditText offermoney2;
-    @BindView(R.id.offerday_2)
-    EditText offerday2;
-    @BindView(R.id.offermoney_3)
-    EditText offermoney3;
-    @BindView(R.id.offerday_3)
-    EditText offerday3;
+    @BindView(R.id.bid_select_list)
+    RecyclerView bidSelectList;
     @BindView(R.id.task_finish)
     TextView taskFinish;
 
+    private FormAdapter2 formAdapter;
     private CustomProgressDialog mDialog;
     private int taskid;
     private int uid;
@@ -80,21 +78,16 @@ public class SeeTheFormActivity extends BaseActivity {
         taskid = bundle.getInt("taskid");
         uid = bundle.getInt("uid");
 
-        Log.e(TAG, "taskid: "+taskid);
-        Log.e(TAG, "uid: "+uid);
+        Log.e(TAG, "taskid: " + taskid);
+        Log.e(TAG, "uid: " + uid);
 
         getFormData(true);
 
-        offermoney1.setEnabled(false);
-        offerday1.setEnabled(false);
-        offerday2.setEnabled(false);
-        offermoney2.setEnabled(false);
-        offerday3.setEnabled(false);
-        offermoney3.setEnabled(false);
     }
 
     /**
      * 获取表单数据
+     *
      * @param isShow
      */
     private void getFormData(boolean isShow) {
@@ -134,37 +127,14 @@ public class SeeTheFormActivity extends BaseActivity {
             totalNumber.setText("总周期：0天");
         }
         List<FormBean.ListBean> list = formBean.getList();
-        if (list != null) {
-            for (FormBean.ListBean bean : list) {
-                if (bean.getName().equals("锄草")) {
-                    offerday1.setText(bean.getDay());
-                    offermoney1.setText(bean.getMoney());
-
-                }
-                if (bean.getName().equals("化肥")) {
-                    offerday2.setText(bean.getDay());
-                    offermoney2.setText(bean.getMoney());
-
-                }
-                if (bean.getName().equals("护理")) {
-                    offerday3.setText(bean.getDay());
-                    offermoney3.setText(bean.getMoney());
-
-                }
-
-            }
-        } else {
-            offerday1.setText("0");
-            offermoney1.setText("0");
-            offerday2.setText("0");
-            offermoney2.setText("0");
-            offerday3.setText("0");
-            offermoney3.setText("0");
-        }
+        formAdapter = new FormAdapter2(mContext,list);
+        bidSelectList.setAdapter(formAdapter);
+        bidSelectList.setLayoutManager(new LinearLayoutManager(mContext));
+        bidSelectList.addItemDecoration(new DividerItemDecoration(mContext,DividerItemDecoration.VERTICAL_LIST));
     }
 
 
-    @OnClick({R.id.id_title_left,R.id.task_finish})
+    @OnClick({R.id.id_title_left, R.id.task_finish})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.id_title_left:
@@ -182,7 +152,7 @@ public class SeeTheFormActivity extends BaseActivity {
      * @param mUid
      */
     private void selectionUser(int mUid) {
-        LogUtil.e("TAG",mUid+"");
+        LogUtil.e("TAG", mUid + "");
         // 拼接参数
         OkGo.post(Urls.URL_JOINOWNER_SELECTION)
                 .tag(this)
@@ -203,4 +173,5 @@ public class SeeTheFormActivity extends BaseActivity {
                     }
                 });
     }
+
 }

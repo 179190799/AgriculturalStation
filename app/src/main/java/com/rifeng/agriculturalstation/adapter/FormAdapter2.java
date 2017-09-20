@@ -1,0 +1,70 @@
+package com.rifeng.agriculturalstation.adapter;
+
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.rifeng.agriculturalstation.R;
+import com.rifeng.agriculturalstation.bean.BidBean;
+import com.rifeng.agriculturalstation.bean.FormBean;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Administrator on 2017/9/20.
+ */
+
+public class FormAdapter2 extends RecyclerView.Adapter<FormAdapter2.ViewHolder> {
+
+    private Context mContext;
+    private List<FormBean.ListBean> lists = new ArrayList<>();
+    private LayoutInflater inflater;
+
+
+    public FormAdapter2(Context context, List<FormBean.ListBean> lists) {
+        this.mContext = context;
+        this.lists = lists;
+        inflater = LayoutInflater.from(mContext);
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.item_select, parent,false);
+        ViewHolder holder = new ViewHolder(view);
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.name.setText(lists.get(position).getName() + "/" + lists.get(position).getUnit());
+        holder.day.setText(lists.get(position).getDay());
+        holder.money.setText(lists.get(position).getMoney());
+    }
+
+    @Override
+    public int getItemCount() {
+        return lists.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView name;
+        EditText money;
+        EditText day;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            day = (EditText) itemView.findViewById(R.id.offerday_1);
+            money = (EditText) itemView.findViewById(R.id.offermoney_1);
+            name = (TextView) itemView.findViewById(R.id.offermoney_1_tv);
+        }
+    }
+
+
+}

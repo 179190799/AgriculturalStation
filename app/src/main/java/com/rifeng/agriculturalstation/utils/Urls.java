@@ -99,6 +99,8 @@ public class Urls {
     public static final String URL_TASK_SELECT= SERVER + "app-task-op-tbpay.html";
     //获取报表数据
     public static final String URL_FORM_DATA= SERVER + "app-task-op-owneroffer.html";
+    //获取报表字段
+    public static final String URL_FORM_NAME= SERVER + "app-task-op-offer.html";
 
 }
 

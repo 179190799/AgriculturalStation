@@ -6,8 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.rifeng.agriculturalstation.bean.FormBean;
 import com.rifeng.agriculturalstation.recyclerview.base.ViewHolder;
 import com.rifeng.agriculturalstation.recyclerview.utils.WrapperUtils;
+import com.rifeng.agriculturalstation.utils.CommonAdapter;
 
 
 public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -22,6 +24,7 @@ public class HeaderAndFooterWrapper<T> extends RecyclerView.Adapter<RecyclerView
     public HeaderAndFooterWrapper(RecyclerView.Adapter adapter) {
         mInnerAdapter = adapter;
     }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

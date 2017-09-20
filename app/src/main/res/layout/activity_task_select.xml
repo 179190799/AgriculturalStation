@@ -14,275 +14,58 @@
         android:padding="5dp">
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal"
             android:padding="5dp"
-            android:layout_marginBottom="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/total_money"
-                android:textColor="#000"
-                android:text="总价：100元"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="总价：100元"
+                android:textColor="#000" />
 
             <TextView
-                android:text=" | "
-                android:textColor="#000"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text=" | "
+                android:textColor="#000" />
 
             <TextView
                 android:id="@+id/total_number"
-                android:textColor="#000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="总周期：100天"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:padding="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="锄草/亩:"
-                android:textSize="16sp"
                 android:textColor="#000" />
 
-            <EditText
-                android:id="@+id/offermoney_1"
-                android:hint="竞标价"
-                android:inputType="number"
-                android:maxLength="20"
-                android:layout_marginStart="10dp"
-                android:textSize="14sp"
-                android:textColor="@color/txtgrey"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#fff" />
 
         </LinearLayout>
 
-        <TextView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/bid_select_list"
             android:layout_width="match_parent"
-            android:background="@color/txtgrey"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_height="0.5dp" />
-
-
-        <LinearLayout
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:padding="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="工期/天:"
-                android:textColor="#000"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/offerday_1"
-                android:hint="完成工期"
-                android:layout_marginStart="10dp"
-                android:textSize="16sp"
-                android:maxLength="20"
-                android:inputType="number"
-                android:textColor="@color/txtgrey"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#fff" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:background="@color/txtgrey"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_height="0.5dp" />
-
-        <LinearLayout
-            android:padding="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="化肥/亩:"
-                android:textSize="16sp"
-                android:textColor="#000" />
-
-            <EditText
-                android:id="@+id/offermoney_2"
-                android:hint="竞标价"
-                android:maxLength="20"
-                android:layout_marginStart="10dp"
-                android:textSize="16sp"
-                android:inputType="number"
-                android:textColor="@color/txtgrey"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#fff" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:background="@color/txtgrey"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_height="0.5dp" />
-
-        <LinearLayout
-            android:padding="5dp"
-            android:layout_width="match_parent"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="工期/天:"
-                android:textSize="16sp"
-                android:textColor="#000" />
-
-            <EditText
-                android:id="@+id/offerday_2"
-                android:hint="完成工期"
-                android:layout_marginStart="10dp"
-                android:inputType="number"
-                android:maxLength="20"
-                android:textSize="16sp"
-                android:textColor="@color/txtgrey"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#fff" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:background="@color/txtgrey"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_height="0.5dp" />
-
-        <LinearLayout
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:padding="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="护理/亩:"
-                android:textSize="16sp"
-                android:textColor="#000" />
-
-            <EditText
-                android:id="@+id/offermoney_3"
-                android:hint="竞标价"
-                android:layout_marginStart="10dp"
-                android:textSize="16sp"
-                android:maxLength="20"
-                android:inputType="number"
-                android:textColor="@color/txtgrey"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#fff" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:background="@color/txtgrey"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_height="0.5dp" />
-
-        <LinearLayout
-            android:padding="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="工期/天:"
-                android:textSize="16sp"
-                android:textColor="#000" />
-
-            <EditText
-                android:id="@+id/offerday_3"
-                android:hint="完成工期"
-                android:layout_marginStart="10dp"
-                android:textSize="16sp"
-                android:inputType="number"
-                android:maxLength="20"
-                android:textColor="@color/txtgrey"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#fff" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:background="@color/txtgrey"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_height="0.5dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_weight="1"
+            android:layout_height="0dp" />
 
             <TextView
                 android:id="@+id/task_finish"
-                android:background="@drawable/mine_btn_selector"
-                android:textColor="#fff"
-                android:text="下一步"
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="20dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
+                android:layout_marginStart="10dp"
+                android:background="@drawable/mine_btn_selector"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:paddingTop="10dp"
+                android:text="下一步"
+                android:textColor="#fff" />
 
     </LinearLayout>
 
